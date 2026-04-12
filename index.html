@@ -20,8 +20,11 @@
             --glass-bg: rgba(20, 25, 40, 0.4);
             --glass-border: rgba(255, 255, 255, 0.15);
             --glass-blur: blur(16px);
-            --accent: #c850c0;
-            --brand-gradient: linear-gradient(135deg, #4f46e5, #7c3aed, #c850c0, #e040a0);
+            --accent: #d946ef;
+            --brand-pink: #e8368f;
+            --brand-purple: #a855f7;
+            --brand-blue: #4f46e5;
+            --brand-gradient: linear-gradient(to left, #4f46e5, #7c3aed, #a855f7, #c026d3, #e8368f);
         }
 
         * {
@@ -142,9 +145,9 @@
         }
 
         .theme-btn.active {
-            background: rgba(255,255,255,0.15);
-            border-color: rgba(255,255,255,0.3);
-            text-shadow: 0 0 10px white;
+            background: rgba(168, 85, 247, 0.25);
+            border-color: rgba(168, 85, 247, 0.5);
+            text-shadow: 0 0 10px rgba(168, 85, 247, 0.8);
         }
 
         /* Start Overlay */
@@ -164,7 +167,7 @@
         .brand-logo {
             font-size: 3.5rem;
             font-weight: 900;
-            background: var(--brand-gradient);
+            background: linear-gradient(to left, #4f46e5, #7c3aed, #a855f7, #c026d3, #e8368f);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -192,12 +195,12 @@
         .start-btn {
             padding: 16px 40px;
             font-size: 1.2rem;
-            background: var(--brand-gradient);
+            background: linear-gradient(to left, #4f46e5, #7c3aed, #a855f7, #c026d3, #e8368f);
             border: none;
             color: white;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(200, 80, 192, 0.5);
+            box-shadow: 0 0 35px rgba(168, 85, 247, 0.5), 0 0 80px rgba(232, 54, 143, 0.2);
             font-weight: bold;
             letter-spacing: 2px;
             transition: transform 0.2s;
@@ -209,7 +212,11 @@
             position: absolute;
             bottom: 30px;
             font-size: 0.8rem;
-            color: #555;
+            color: #777;
+            background: linear-gradient(to left, #4f46e5, #e8368f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .hidden { opacity: 0; pointer-events: none; }
