@@ -207,6 +207,46 @@
   @keyframes blink{50%{opacity:.4}}
   @keyframes cffall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
   @media (max-width:360px){.pk-grid{gap:12px 8px}.avatar{width:48px;height:48px;font-size:1.15rem}}
+
+  /* ===== sea waves ===== */
+  .waves{position:absolute;left:0;right:0;bottom:-1px;height:42px;pointer-events:none;z-index:0;overflow:hidden}
+  .waves .w{position:absolute;left:0;right:0;bottom:0;height:42px;background-repeat:repeat-x;background-position:0 bottom}
+  .waves .w1{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='42' viewBox='0 0 200 42'%3E%3Cpath d='M0 24 q 25 -14 50 0 t 50 0 t 50 0 t 50 0 V42 H0 Z' fill='%23bfe6ef'/%3E%3C/svg%3E");background-size:200px 42px;opacity:.5;animation:wave1 9s linear infinite}
+  .waves .w2{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='38' viewBox='0 0 160 38'%3E%3Cpath d='M0 22 q 20 12 40 0 t 40 0 t 40 0 t 40 0 V38 H0 Z' fill='%23ffffff'/%3E%3C/svg%3E");background-size:160px 38px;height:38px;opacity:.4;animation:wave2 6s linear infinite}
+  @keyframes wave1{to{background-position-x:200px}}
+  @keyframes wave2{to{background-position-x:-160px}}
+  .hero>.greet,.hero>.ring{position:relative;z-index:2}
+  .hero{background:linear-gradient(120deg,#0e4d92,#0a3a70 45%,#0f6f93);background-size:220% 220%;animation:sea 14s ease infinite}
+  @keyframes sea{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  #picker .pk-head,#picker .pk-grid,#picker .pk-foot{position:relative;z-index:1}
+  .pk-waves{height:60px;opacity:.5}.pk-waves .w{height:60px}.pk-waves .w1{background-size:200px 60px;opacity:.18}.pk-waves .w2{background-size:160px 52px;height:52px;opacity:.14}
+
+  /* ===== overview mini table ===== */
+  .overview{padding:15px 12px 12px}
+  .ov-title{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.08rem;margin:0 4px 13px;display:flex;align-items:center;gap:8px}
+  .ov-title .wv{font-size:1.1rem}
+  table.ov{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed}
+  .ov thead th{font-weight:700;text-align:center;padding:0 0 4px}
+  .ov thead .ov-dow{display:block;font-size:.6rem;color:var(--gold);font-weight:800}
+  .ov thead .ov-d{font-family:'Cinzel',serif;font-weight:800;color:var(--blue);font-size:.92rem}
+  .ov-task{text-align:right;white-space:nowrap;font-size:.7rem;font-weight:700;color:var(--ink);width:76px;max-width:76px}
+  .ov-task .ov-ic{margin-left:2px;font-size:.8rem}
+  .ov-cell.na{background:repeating-linear-gradient(45deg,#f2f3f0,#f2f3f0 4px,#eaece8 4px,#eaece8 8px);color:#c4cacf;cursor:default;box-shadow:none;transform:none}
+  .ov-cell{width:100%;aspect-ratio:1/1;min-height:30px;border-radius:9px;background:#eef1ee;border:1.5px solid transparent;
+    display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#cfd6dd;transition:.18s cubic-bezier(.34,1.56,.64,1)}
+  .ov-cell.done{background:linear-gradient(135deg,var(--done),#15915f);color:#fff;box-shadow:0 3px 9px rgba(30,166,114,.32);transform:scale(1.04)}
+  .ov-cell.mine{border-color:var(--gold)}
+  .ov-cell.mine:not(.done){background:var(--gold-soft);color:var(--gold)}
+  .ov-cell:active{transform:scale(.86)}
+  .ov-legend{display:flex;gap:16px;justify-content:center;margin-top:13px;font-size:.74rem;color:var(--muted);flex-wrap:wrap}
+  .ov-legend span{display:inline-flex;align-items:center;gap:6px}
+  .ov-legend i{width:14px;height:14px;border-radius:5px;display:inline-block}
+
+  /* ===== entrance animations ===== */
+  .enter{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+  @keyframes rise{from{opacity:0;transform:translateY(16px) scale(.985)}to{opacity:1;transform:none}}
+  .pk-person{animation:rise .5s cubic-bezier(.22,1,.36,1) both}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.001s!important}}
 </style>
 </head>
 <body>
@@ -225,6 +265,7 @@
     <button class="pk-guest" id="guestBtn">רק לצפות בלו״ז המלא →</button>
     <button class="pk-reset" id="pkReset">איפוס כל הסימונים</button>
   </div>
+  <div class="waves pk-waves"><div class="w w1"></div><div class="w w2"></div></div>
 </div>
 
 <!-- ===== APP ===== -->
@@ -281,7 +322,7 @@ const TASKS = ["סופר","ארוחת בוקר","פינוי בוקר","מדיח 
                "ארוחת ערב","פינוי ערב","מדיח ערב","עריכת שולחן ערב","אסיפת ותליית מגבות"];
 /* schedule[task][date] — סדר התאריכים: 7.7,8.7,9.7,10.7,11.7,12.7 */
 const SCHEDULE = [
-  ["דוד ומור",   "אליה ויורם",  "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     "אליה ויורם"],
+  ["דוד ומור",   "אליה ויורם",  "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     ""],
   ["אליה ויורם", "דוד ומור",    "שני ועמיחי",  "שירה ואביחי", "פפי והנכדים",  "שירה ואביחי"],
   ["שירה ואביחי","שני ועמיחי",  "אליה ויורם",  "דוד ומור",    "אליה ויורם",   "דוד ומור"],
   ["שני ועמיחי", "שירה ואביחי", "דוד ומור",    "אליה ויורם",  "שירה ואביחי",  "אליה ויורם"],
@@ -293,6 +334,13 @@ const SCHEDULE = [
   ["עמית ואמילי","רוי ובר",     "אמילי ובר",   "דריה וליהיא", "דריה ובר",     "עמית וליהיא"]
 ];
 const HEB_DOW  = ["יום ראשון","יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","שבת"];
+const HEB_DOW_S= ["א׳","ב׳","ג׳","ד׳","ה׳","ו׳","ש׳"];
+const TASK_META=[
+  {ic:"📋",s:"סופר"},   {ic:"🍳",s:"א.בוקר"}, {ic:"🧹",s:"פ.בוקר"},
+  {ic:"🧽",s:"מ.בוקר"}, {ic:"🍽️",s:"ש.בוקר"}, {ic:"🍲",s:"א.ערב"},
+  {ic:"🧹",s:"פ.ערב"},  {ic:"🧽",s:"מ.ערב"},  {ic:"🍴",s:"ש.ערב"}, {ic:"🧺",s:"מגבות"}
+];
+function dowS(date){ const[d,m]=date.split(".").map(Number); return HEB_DOW_S[new Date(2026,m-1,d).getDay()] }
 
 /* פיצול זוג לאנשים בודדים: "דוד ומור" → ["דוד","מור"] */
 function splitPair(s){ return s.split(/\s+ו/).map(x=>x.trim()).filter(Boolean); }
@@ -307,6 +355,7 @@ const SELF_KEY  = "parus2026-self-v1";
 let done = loadDone();
 let self = localStorage.getItem(SELF_KEY) || null;
 let view = "mine";
+let animateNext = true;
 let pending = new Set(), busy=false, queued=false;
 
 function loadDone(){ try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return {}} }
@@ -347,14 +396,14 @@ function buildPicker(){
 }
 function chooseSelf(name){
   self=name; localStorage.setItem(SELF_KEY,name);
-  view='mine';
+  view='mine'; animateNext=true;
   $('picker').classList.add('hidden');
   $('app').classList.remove('hidden');
   syncSeg(); renderMe(); render(); syncCycle();
 }
 function openPicker(){ buildPicker(); $('picker').classList.remove('hidden'); }
 function guest(){
-  self=null; localStorage.removeItem(SELF_KEY); view='all';
+  self=null; localStorage.removeItem(SELF_KEY); view='all'; animateNext=true;
   $('picker').classList.add('hidden'); $('app').classList.remove('hidden');
   syncSeg(); renderMe(); render(); syncCycle();
 }
@@ -375,9 +424,12 @@ function syncSeg(){
   $('viewAll').classList.toggle('hidden',view!=='all');
 }
 
-function render(){ view==='mine'?renderMineView():renderAllView(); }
+function render(){ const a=animateNext; animateNext=false; view==='mine'?renderMineView(a):renderAllView(a); }
+function enterAttr(a,i){ return a?` enter" style="animation-delay:${(i*0.06).toFixed(2)}s`:`"`; }
+function countUp(node,target){ if(!node)return; const t0=performance.now(),dur=700;
+  (function s(t){ const k=Math.min((t-t0)/dur,1); node.textContent=Math.round(k*target); if(k<1)requestAnimationFrame(s); })(performance.now()); }
 
-function renderMineView(){
+function renderMineView(a){
   const el=$('viewMine');
   if(!self){
     el.innerHTML=`<div class="empty"><div class="ic">👋</div><div class="t">לא בחרתם משתמש</div>
@@ -388,28 +440,29 @@ function renderMineView(){
   const total=list.length, dn=list.filter(x=>done[key(x.ti,x.di)]).length;
   const pct=total?Math.round(dn/total*100):0;
   let msg = dn===0?"בוא נתחיל 💪" : dn<total?`עוד ${total-dn} ולסיים!` : "סיימת הכל! 🎉";
+  let i=0;
 
-  let html=`<div class="hero"><div class="gk"></div>
+  let html=`<div class="hero ${enterAttr(a,i++)}"><div class="gk"></div>
     <div class="greet"><div class="hi">שלום,</div><div class="who">${self}</div><div class="msg">${msg}</div></div>
     <div class="ring" style="--p:${pct}"><div class="hole"><span class="n">${dn}</span><span class="d">מתוך ${total}</span></div></div>
+    <div class="waves"><div class="w w1"></div><div class="w w2"></div></div>
   </div>`;
 
   if(total && dn===total){
-    html+=`<div class="celebrate"><div class="e">🏛️✨</div><div class="t">כל הכבוד, ${self}!</div><div class="s">סיימת את כל התורנויות שלך</div></div>`;
+    html+=`<div class="celebrate ${enterAttr(a,i++)}"><div class="e">🏛️✨</div><div class="t">כל הכבוד, ${self}!</div><div class="s">סיימת את כל התורנויות שלך</div></div>`;
   }
 
-  // group by date
   const byDate={};
   list.forEach(x=>{ (byDate[x.di]=byDate[x.di]||[]).push(x) });
   DATES.forEach((date,di)=>{
     if(!byDate[di]) return;
     const[d,m]=date.split(".");
-    html+=`<div class="day-label"><span class="dl">${dow(date)}</span><span class="dd">${date}</span><span class="ln"></span></div><div class="card">`;
+    html+=`<div class="day-label ${enterAttr(a,i++)}"><span class="dl">${dow(date)}</span><span class="dd">${date}</span><span class="ln"></span></div><div class="card ${enterAttr(a,i++)}">`;
     byDate[di].forEach(x=>{
       const isDone=!!done[key(x.ti,x.di)];
       html+=`<div class="duty ${isDone?'done':''}" data-ti="${x.ti}" data-di="${x.di}">
         <div class="check"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
-        <div class="d-body"><div class="d-task">${x.task}</div>
+        <div class="d-body"><div class="d-task">${TASK_META[x.ti].ic} ${x.task}</div>
           <div class="d-sub"><span class="with">${partnersText(x.who,self)}</span></div></div>
         <div class="d-date"><span class="dn">${d}</span><span class="dm">יולי</span></div>
       </div>`;
@@ -418,29 +471,59 @@ function renderMineView(){
   });
   el.innerHTML=html;
   el.querySelectorAll('.duty').forEach(r=>r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di));
+  if(a) countUp(el.querySelector('.ring .n'),dn);
 }
 
-function renderAllView(){
-  const el=$('viewAll'); let html="";
+function overviewHTML(a){
+  let h=`<div class="card overview ${enterAttr(a,0)}">
+    <div class="ov-title"><span class="wv">🌊</span> מבט מהיר על כל השבוע</div>
+    <table class="ov"><thead><tr><th></th>`;
+  DATES.forEach(date=>{ const[d]=date.split("."); h+=`<th><span class="ov-dow">${dowS(date)}</span><span class="ov-d">${d}</span></th>`; });
+  h+=`</tr></thead><tbody>`;
+  TASKS.forEach((task,ti)=>{
+    h+=`<tr><th class="ov-task"><span class="ov-ic">${TASK_META[ti].ic}</span>${TASK_META[ti].s}</th>`;
+    DATES.forEach((date,di)=>{
+      const who=SCHEDULE[ti][di];
+      if(!who){ h+=`<td><span class="ov-cell na" title="${task} · ${date} · אין תורנות">–</span></td>`; return; }
+      const isDone=!!done[key(ti,di)], mine=self&&splitPair(who).includes(self);
+      h+=`<td><button class="ov-cell ${isDone?'done':''} ${mine?'mine':''}" data-ti="${ti}" data-di="${di}" title="${task} · ${date} · ${who}">${isDone?'✓':''}</button></td>`;
+    });
+    h+=`</tr>`;
+  });
+  h+=`</tbody></table>
+    <div class="ov-legend">
+      <span><i style="background:linear-gradient(135deg,var(--done),#15915f)"></i>בוצע</span>
+      <span><i style="background:var(--gold-soft);border:1.5px solid var(--gold)"></i>שלי</span>
+      <span><i style="background:#eef1ee"></i>ממתין</span>
+    </div></div>`;
+  return h;
+}
+
+function renderAllView(a){
+  const el=$('viewAll');
+  let html=overviewHTML(a); let i=1;
   DATES.forEach((date,di)=>{
     const[d,m]=date.split(".");
-    const dnt=TASKS.filter((_,ti)=>done[key(ti,di)]).length;
-    html+=`<div class="card allday"><div class="allday-head">
+    let dtot=0,dnt=0;
+    TASKS.forEach((_,ti)=>{ if(SCHEDULE[ti][di]){ dtot++; if(done[key(ti,di)])dnt++; } });
+    html+=`<div class="card allday ${enterAttr(a,i++)}"><div class="allday-head">
       <div class="d-date"><span class="dn">${d}</span><span class="dm">יולי</span></div>
       <div class="meta"><div class="dow">${dow(date)}</div><div class="cnt">${date}</div></div>
-      <div class="pr">${dnt}/${TASKS.length}</div></div>`;
+      <div class="pr">${dnt}/${dtot}</div></div>`;
     TASKS.forEach((task,ti)=>{
-      const who=SCHEDULE[ti][di], isDone=!!done[key(ti,di)];
+      const who=SCHEDULE[ti][di];
+      if(!who) return;
+      const isDone=!!done[key(ti,di)];
       const mine=self&&splitPair(who).includes(self);
       html+=`<div class="mini ${isDone?'done':''} ${mine?'mine':''}" data-ti="${ti}" data-di="${di}">
         <div class="m-check"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
-        <div class="m-body"><div class="m-task">${task}</div><div class="m-who">${who}</div></div>
+        <div class="m-body"><div class="m-task">${TASK_META[ti].ic} ${task}</div><div class="m-who">${who}</div></div>
       </div>`;
     });
     html+=`</div>`;
   });
   el.innerHTML=html;
-  el.querySelectorAll('.mini').forEach(r=>r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di));
+  el.querySelectorAll('.mini,.ov-cell').forEach(r=>{ if(r.dataset.ti===undefined)return; r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di); });
 }
 
 function toggle(ti,di){
@@ -507,7 +590,7 @@ $('scrim').onclick=closeSheet;
 $('closeSheet').onclick=closeSheet;
 $('changeMe').onclick=()=>{ closeSheet(); openPicker(); };
 $('resetAll').onclick=()=>{ closeSheet(); doReset(); };
-document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ view=b.dataset.v; syncSeg(); render(); });
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ view=b.dataset.v; animateNext=true; syncSeg(); render(); });
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') syncCycle(); });
 setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); },7000);
 
