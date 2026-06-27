@@ -221,24 +221,31 @@
   #picker .pk-head,#picker .pk-grid,#picker .pk-foot{position:relative;z-index:1}
   .pk-waves{height:60px;opacity:.5}.pk-waves .w{height:60px}.pk-waves .w1{background-size:200px 60px;opacity:.18}.pk-waves .w2{background-size:160px 52px;height:52px;opacity:.14}
 
-  /* ===== overview mini table ===== */
-  .overview{padding:15px 12px 12px}
-  .ov-title{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.08rem;margin:0 4px 13px;display:flex;align-items:center;gap:8px}
+  /* ===== overview table (with names) ===== */
+  .overview{padding:15px 10px 12px}
+  .ov-title{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.08rem;margin:0 4px 6px;display:flex;align-items:center;gap:8px}
   .ov-title .wv{font-size:1.1rem}
-  table.ov{width:100%;border-collapse:separate;border-spacing:4px;table-layout:fixed}
-  .ov thead th{font-weight:700;text-align:center;padding:0 0 4px}
-  .ov thead .ov-dow{display:block;font-size:.6rem;color:var(--gold);font-weight:800}
-  .ov thead .ov-d{font-family:'Cinzel',serif;font-weight:800;color:var(--blue);font-size:.92rem}
-  .ov-task{text-align:right;white-space:nowrap;font-size:.7rem;font-weight:700;color:var(--ink);width:76px;max-width:76px}
-  .ov-task .ov-ic{margin-left:2px;font-size:.8rem}
-  .ov-cell.na{background:repeating-linear-gradient(45deg,#f2f3f0,#f2f3f0 4px,#eaece8 4px,#eaece8 8px);color:#c4cacf;cursor:default;box-shadow:none;transform:none}
-  .ov-cell{width:100%;aspect-ratio:1/1;min-height:30px;border-radius:9px;background:#eef1ee;border:1.5px solid transparent;
-    display:flex;align-items:center;justify-content:center;font-size:.85rem;color:#cfd6dd;transition:.18s cubic-bezier(.34,1.56,.64,1)}
-  .ov-cell.done{background:linear-gradient(135deg,var(--done),#15915f);color:#fff;box-shadow:0 3px 9px rgba(30,166,114,.32);transform:scale(1.04)}
+  .ov-hint{font-size:.74rem;color:var(--muted);margin:0 4px 12px}
+  .ov-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px;padding-bottom:4px}
+  table.ov{border-collapse:separate;border-spacing:5px;table-layout:fixed;min-width:540px;width:100%}
+  .ov thead th{font-weight:700;text-align:center;padding:0 0 5px;vertical-align:bottom}
+  .ov thead .ov-dow{display:block;font-size:.62rem;color:var(--gold);font-weight:800}
+  .ov thead .ov-d{font-family:'Cinzel',serif;font-weight:800;color:var(--blue);font-size:.95rem}
+  .ov-task{position:sticky;right:0;z-index:2;background:#fff;text-align:right;font-size:.74rem;font-weight:800;
+    color:var(--ink);width:72px;max-width:72px;padding-left:11px;white-space:nowrap;line-height:1.1;
+    box-shadow:-8px 0 8px -6px rgba(0,0,0,.08)}
+  .ov-task .ov-ic{margin-left:3px;font-size:.82rem}
+  .ov-cell{width:100%;min-height:46px;border-radius:10px;background:#eef1ee;border:1.5px solid transparent;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:5px 3px;
+    font-size:.66rem;line-height:1.08;font-weight:700;color:#566370;text-align:center;word-break:break-word;
+    transition:.16s cubic-bezier(.34,1.56,.64,1)}
+  .ov-cell .ck{font-size:.7rem;line-height:1;margin-bottom:1px}
+  .ov-cell.done{background:linear-gradient(135deg,var(--done),#15915f);color:#fff;box-shadow:0 3px 9px rgba(30,166,114,.3)}
   .ov-cell.mine{border-color:var(--gold)}
-  .ov-cell.mine:not(.done){background:var(--gold-soft);color:var(--gold)}
-  .ov-cell:active{transform:scale(.86)}
-  .ov-legend{display:flex;gap:16px;justify-content:center;margin-top:13px;font-size:.74rem;color:var(--muted);flex-wrap:wrap}
+  .ov-cell.mine:not(.done){background:var(--gold-soft);color:#8a6a1c}
+  .ov-cell:active{transform:scale(.93)}
+  .ov-cell.na{background:repeating-linear-gradient(45deg,#f2f3f0,#f2f3f0 5px,#eaece8 5px,#eaece8 10px);color:#c4cacf;cursor:default}
+  .ov-legend{display:flex;gap:16px;justify-content:center;margin-top:14px;font-size:.74rem;color:var(--muted);flex-wrap:wrap}
   .ov-legend span{display:inline-flex;align-items:center;gap:6px}
   .ov-legend i{width:14px;height:14px;border-radius:5px;display:inline-block}
 
@@ -263,7 +270,6 @@
   <div class="pk-grid" id="pkGrid"></div>
   <div class="pk-foot">
     <button class="pk-guest" id="guestBtn">רק לצפות בלו״ז המלא →</button>
-    <button class="pk-reset" id="pkReset">איפוס כל הסימונים</button>
   </div>
   <div class="waves pk-waves"><div class="w w1"></div><div class="w w2"></div></div>
 </div>
@@ -277,7 +283,6 @@
         <span><span class="nm" id="meNm">אורח</span></span>
         <span class="sw">החלפה ⇄</span>
       </button>
-      <span class="sync" id="syncBadge"><i></i><span>מתחבר…</span></span>
       <div class="brand"><div class="b1">תורנות פארוס</div><div class="b2">ΠΑΡΟΣ MMXXVI</div></div>
     </div>
     <div class="seg" id="seg">
@@ -305,7 +310,6 @@
     <h3>הגדרות</h3>
     <p class="sub" id="sheetSub"></p>
     <button class="sheet-btn primary" id="changeMe">החלפת משתמש</button>
-    <button class="sheet-btn danger" id="resetAll">איפוס כל הסימונים (לכולם)</button>
     <button class="sheet-btn ghost" id="closeSheet">סגירה</button>
   </div>
 </div>
@@ -477,7 +481,8 @@ function renderMineView(a){
 function overviewHTML(a){
   let h=`<div class="card overview ${enterAttr(a,0)}">
     <div class="ov-title"><span class="wv">🌊</span> מבט מהיר על כל השבוע</div>
-    <table class="ov"><thead><tr><th></th>`;
+    <div class="ov-hint">גללו לצדדים לראות את כל הימים · הקישו על שם כדי לסמן</div>
+    <div class="ov-wrap"><table class="ov"><thead><tr><th class="ov-task"></th>`;
   DATES.forEach(date=>{ const[d]=date.split("."); h+=`<th><span class="ov-dow">${dowS(date)}</span><span class="ov-d">${d}</span></th>`; });
   h+=`</tr></thead><tbody>`;
   TASKS.forEach((task,ti)=>{
@@ -486,11 +491,11 @@ function overviewHTML(a){
       const who=SCHEDULE[ti][di];
       if(!who){ h+=`<td><span class="ov-cell na" title="${task} · ${date} · אין תורנות">–</span></td>`; return; }
       const isDone=!!done[key(ti,di)], mine=self&&splitPair(who).includes(self);
-      h+=`<td><button class="ov-cell ${isDone?'done':''} ${mine?'mine':''}" data-ti="${ti}" data-di="${di}" title="${task} · ${date} · ${who}">${isDone?'✓':''}</button></td>`;
+      h+=`<td><button class="ov-cell ${isDone?'done':''} ${mine?'mine':''}" data-ti="${ti}" data-di="${di}" title="${task} · ${date} · ${who}">${isDone?'<span class="ck">✓</span>':''}${who}</button></td>`;
     });
     h+=`</tr>`;
   });
-  h+=`</tbody></table>
+  h+=`</tbody></table></div>
     <div class="ov-legend">
       <span><i style="background:linear-gradient(135deg,var(--done),#15915f)"></i>בוצע</span>
       <span><i style="background:var(--gold-soft);border:1.5px solid var(--gold)"></i>שלי</span>
@@ -527,15 +532,23 @@ function renderAllView(a){
 }
 
 function toggle(ti,di){
+  if(!self){ showToast("בחרו תחילה מי אתם 🙂"); openPicker(); return; }
   const k=key(ti,di);
-  const nowDone=!done[k];
-  if(nowDone) done[k]=true; else delete done[k];
+  const marker=done[k];
+  if(marker){
+    // already marked — only the person who marked it may cancel
+    if(marker===self || marker===true){ delete done[k]; afterToggle(k,false); }
+    else { showToast("רק "+marker+" יכול/ה לבטל את הסימון הזה"); if(navigator.vibrate)navigator.vibrate([10,40,10]); }
+  } else {
+    done[k]=self; afterToggle(k,true);
+  }
+}
+function afterToggle(k,nowDone){
   pending.add(k); saveDone();
   if(navigator.vibrate) navigator.vibrate(nowDone?18:8);
   render();
   if(nowDone){
     showToast("יופי! התורנות סומנה ✓");
-    // celebrate if self just completed all
     if(self){ const l=dutiesOf(self); if(l.length && l.every(x=>done[key(x.ti,x.di)])) confetti(); }
   }
   syncCycle();
@@ -552,7 +565,7 @@ async function syncCycle(){
   if(busy){queued=true;return} busy=true; setSync('sync');
   try{
     const remote=await remoteGet(); let changed=false;
-    Object.keys(remote).forEach(k=>{ if(!pending.has(k)&&!done[k]){done[k]=true;changed=true} });
+    Object.keys(remote).forEach(k=>{ if(!pending.has(k)&&done[k]!==remote[k]){done[k]=remote[k];changed=true} });
     Object.keys(done).forEach(k=>{ if(!pending.has(k)&&!remote[k]){delete done[k];changed=true} });
     const snap=[...pending];
     if(snap.length){ await remotePut({...done}); snap.forEach(k=>pending.delete(k)); }
@@ -584,21 +597,13 @@ function closeSheet(){ $('sheet').classList.remove('show'); }
 
 /* ============ events ============ */
 $('guestBtn').onclick=guest;
-$('pkReset').onclick=()=>doReset();
 $('meChip').onclick=openSheet;
 $('scrim').onclick=closeSheet;
 $('closeSheet').onclick=closeSheet;
 $('changeMe').onclick=()=>{ closeSheet(); openPicker(); };
-$('resetAll').onclick=()=>{ closeSheet(); doReset(); };
 document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ view=b.dataset.v; animateNext=true; syncSeg(); render(); });
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') syncCycle(); });
 setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); },7000);
-
-function doReset(){
-  if(confirm("לאפס את כל הסימונים עבור כולם? פעולה זו תמחק את כל ה־✓ מהלוח המשותף.")){
-    Object.keys(done).forEach(k=>pending.add(k)); done={}; saveDone(); render(); syncCycle(); showToast("כל הסימונים אופסו");
-  }
-}
 
 /* ============ init ============ */
 buildPicker(); renderMe();
