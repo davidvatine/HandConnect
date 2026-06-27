@@ -217,6 +217,21 @@
 
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
   .cf{position:absolute;top:-12px;width:10px;height:14px;border-radius:2px;will-change:transform,opacity}
+  /* tap burst */
+  .spark{position:absolute;width:9px;height:9px;border-radius:2px;pointer-events:none;will-change:transform,opacity;
+    transform:translate(-50%,-50%);box-shadow:0 0 6px rgba(255,255,255,.5)}
+  @keyframes spark{0%{transform:translate(-50%,-50%) scale(1);opacity:1}
+    100%{transform:translate(calc(-50% + var(--tx)),calc(-50% + var(--ty))) scale(.25);opacity:0}}
+  .pulsering{position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid var(--done);
+    transform:translate(-50%,-50%) scale(.4);opacity:.85;pointer-events:none;animation:pulsering .6s ease-out forwards}
+  @keyframes pulsering{to{transform:translate(-50%,-50%) scale(3.4);opacity:0;border-color:var(--gold)}}
+  /* checkbox pop + draw on mark */
+  @keyframes checkpop{0%{transform:scale(.5)}55%{transform:scale(1.22)}100%{transform:scale(1.05)}}
+  @keyframes ovpop{0%{transform:scale(.5)}55%{transform:scale(1.14)}100%{transform:scale(1.04)}}
+  @keyframes checkdraw{from{stroke-dashoffset:26}to{stroke-dashoffset:0}}
+  .check.pop,.m-check.pop{animation:checkpop .42s cubic-bezier(.34,1.56,.64,1)}
+  .ov-cell.pop{animation:ovpop .42s cubic-bezier(.34,1.56,.64,1);z-index:1}
+  .check.pop svg path,.m-check.pop svg path{animation:checkdraw .34s ease .05s both}
 
   @keyframes fade{from{opacity:0}to{opacity:1}}
   @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -495,7 +510,7 @@ function renderMineView(a){
     html+=`</div>`;
   });
   el.innerHTML=html;
-  el.querySelectorAll('.duty').forEach(r=>r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di));
+  el.querySelectorAll('.duty').forEach(r=>r.onclick=(e)=>toggle(+r.dataset.ti,+r.dataset.di,e));
   if(a) countUp(el.querySelector('.ring .n'),dn);
 }
 
@@ -549,10 +564,10 @@ function renderAllView(a){
     html+=`</div>`;
   });
   el.innerHTML=html;
-  el.querySelectorAll('.mini,.ov-cell').forEach(r=>{ if(r.dataset.ti===undefined)return; r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di); });
+  el.querySelectorAll('.mini,.ov-cell').forEach(r=>{ if(r.dataset.ti===undefined)return; r.onclick=(e)=>toggle(+r.dataset.ti,+r.dataset.di,e); });
 }
 
-function toggle(ti,di){
+function toggle(ti,di,ev){
   if(!self){ showToast("בחרו תחילה מי אתם 🙂"); openPicker(); return; }
   const who=SCHEDULE[ti][di];
   if(!who) return;
@@ -564,18 +579,45 @@ function toggle(ti,di){
   }
   const k=key(ti,di);
   if(done[k]){ delete done[k]; afterToggle(k,false); }
-  else { done[k]=self; afterToggle(k,true); }
+  else {
+    done[k]=self;
+    // capture tap position (from the check / cell) before re-render
+    let cx,cy;
+    try{ const t=ev&&ev.currentTarget; const chk=t&&(t.querySelector('.check,.m-check')||t);
+         const r=(chk||t).getBoundingClientRect(); cx=r.left+r.width/2; cy=r.top+r.height/2; }catch(e){}
+    afterToggle(k,true,cx,cy);
+  }
 }
-function afterToggle(k,nowDone){
+function afterToggle(k,nowDone,cx,cy){
   pending.add(k); saveDone();
   if(navigator.vibrate) navigator.vibrate(nowDone?18:8);
   render();
   if(nowDone){
+    // pop the freshly-rendered checkbox / cell for this duty
+    document.querySelectorAll('[data-ti="'+k.split('_')[0]+'"][data-di="'+k.split('_')[1]+'"]').forEach(elm=>{
+      const chk=elm.querySelector('.check,.m-check'); (chk||elm).classList.add('pop');
+    });
+    if(cx!=null && !isNaN(cx)) burst(cx,cy);
     const all = self && (function(){ const l=dutiesOf(self); return l.length && l.every(x=>done[key(x.ti,x.di)]); })();
     if(all){ celebrate(); }
     else { soundDone(); showToast("יופי! התורנות סומנה ✓"); }
   }
   syncCycle();
+}
+function burst(x,y){
+  const c=$('confetti'); const cols=['#c8a14a','#e2c879','#1ea672','#1769b5','#ffffff'];
+  for(let i=0;i<16;i++){
+    const d=document.createElement('div'); d.className='spark';
+    const ang=Math.PI*2*(i/16)+Math.random()*0.6, dist=42+Math.random()*48;
+    d.style.left=x+'px'; d.style.top=y+'px'; d.style.background=cols[i%cols.length];
+    d.style.setProperty('--tx',(Math.cos(ang)*dist).toFixed(0)+'px');
+    d.style.setProperty('--ty',(Math.sin(ang)*dist).toFixed(0)+'px');
+    const dur=0.5+Math.random()*0.35; d.style.animation='spark '+dur.toFixed(2)+'s cubic-bezier(.2,.7,.3,1) forwards';
+    if(Math.random()>0.5) d.style.borderRadius='50%';
+    c.appendChild(d); setTimeout(()=>d.remove(),dur*1000+60);
+  }
+  const r=document.createElement('div'); r.className='pulsering'; r.style.left=x+'px'; r.style.top=y+'px';
+  c.appendChild(r); setTimeout(()=>r.remove(),650);
 }
 
 /* ============ sound ============ */
