@@ -78,6 +78,18 @@
     text-shadow:0 2px 0 rgba(0,0,0,.02);
   }
   .tagline{color:var(--muted);font-size:.98rem;margin-top:12px;font-weight:400}
+  .sync{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-size:.78rem;
+    font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);
+    padding:5px 12px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
+  .sync i{width:8px;height:8px;border-radius:50%;background:#c9ad5a;flex:none;
+    box-shadow:0 0 0 0 rgba(46,139,87,.5)}
+  .sync.ok i{background:var(--done);animation:pulse 2s infinite}
+  .sync.ok span{color:var(--done)}
+  .sync.sync i{background:#e0a915;animation:spin .9s linear infinite}
+  .sync.off i{background:#c0392b}
+  .sync.off span{color:#c0392b}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,139,87,.45)}70%{box-shadow:0 0 0 7px rgba(46,139,87,0)}100%{box-shadow:0 0 0 0 rgba(46,139,87,0)}}
+  @keyframes spin{to{transform:scale(1.15)}}
 
   /* ---------- Controls ---------- */
   .controls{
@@ -220,7 +232,8 @@
     <div class="eyebrow">Parus &middot; Roster</div>
     <h1>לו״ז תורנות פארוס</h1>
     <div class="year">2026</div>
-    <p class="tagline">סמנו ✓ כשסיימתם את התורנות שלכם — מתעדכן אוטומטית במכשיר שלכם</p>
+    <p class="tagline">סמנו ✓ כשסיימתם את התורנות — מסונכרן בין כל המכשירים בזמן אמת</p>
+    <div class="sync" id="syncBadge"><i></i><span>מתחבר…</span></div>
   </header>
 
   <div class="meander"></div>
@@ -228,7 +241,7 @@
   <div class="controls">
     <div class="search-row">
       <svg viewBox="0 0 24 24"><path d="M21 21l-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input id="search" type="text" placeholder="חפשו את השם שלכם…" autocomplete="off" inputmode="search">
+      <input id="search" type="text" placeholder="חפשו את הזוג / השם שלכם…" autocomplete="off" inputmode="search">
     </div>
     <div class="chips" id="chips"></div>
     <div class="toolbar">
@@ -298,13 +311,19 @@ const SCHEDULE = [
   ["עמית ואמילי","רוי ובר",     "אמילי ובר",   "דריה וליהיא", "דריה ובר",     "עמית וליהיא"]   // אסיפת ותליית מגבות
 ];
 
-/* רשימת השמות (יחידים) לכפתורי הסינון — נגזרת מהזוגות */
-const PEOPLE = ["דוד","מור","אליה","יורם","שירה","אביחי","שני","עמיחי",
-                "דריה","בר","עמית","ליהיא","רוי","אמילי","פפי","מאמי"];
+/* כפתורי הסינון לפי זוגות — נגזרים אוטומטית מהלו״ז (ייחודיים, לפי סדר הופעה) */
+const PAIRS = [...new Set(SCHEDULE.flat())];
 
 const HEB_DOW = ["יום ראשון","יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","שבת"];
 
-/* ============================================================ */
+/* ============================================================
+   סנכרון ענן משותף — כל המכשירים רואים את אותו לוח
+   (אחסון JSON חינמי, ללא צורך בהתחברות; localStorage כגיבוי)
+   ============================================================ */
+const SYNC_URL = "https://api.restful-api.dev/objects/ff8081819d82fab6019f0a4858bd6c80";
+let pending = new Set();   // שינויים מקומיים שטרם נשמרו לענן
+let busy = false, queued = false;
+
 const STORE_KEY = "parus2026-done-v1";
 let done = loadDone();
 let query = "";
@@ -332,7 +351,7 @@ const daysEl = document.getElementById('days');
 const chipsEl = document.getElementById('chips');
 
 function buildChips(){
-  PEOPLE.forEach(name=>{
+  PAIRS.forEach(name=>{
     const b = document.createElement('button');
     b.className='chip';
     b.textContent=name;
@@ -387,9 +406,52 @@ function buildDays(){
 function toggle(ti,di,row){
   const k = key(ti,di);
   if(done[k]) delete done[k]; else done[k]=true;
+  pending.add(k);
   saveDone();
   render();
   if(done[k]) showToast("כל הכבוד! התורנות סומנה כבוצעה ✓");
+  syncCycle();
+}
+
+/* ---------- cloud sync ---------- */
+function setSync(state){
+  const el=document.getElementById('syncBadge');
+  if(!el) return;
+  el.className='sync '+state;
+  const txt={ok:'מסונכרן',sync:'מסנכרן…',off:'לא מקוון'}[state]||'מתחבר…';
+  el.querySelector('span').textContent=txt;
+}
+async function remoteGet(){
+  const r=await fetch(SYNC_URL,{cache:'no-store'});
+  if(!r.ok) throw new Error('GET '+r.status);
+  const j=await r.json();
+  return (j&&j.data&&j.data.done) || {};
+}
+async function remotePut(map){
+  const r=await fetch(SYNC_URL,{method:'PUT',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({name:'parus-roster-2026',data:{done:map,v:1}})});
+  if(!r.ok) throw new Error('PUT '+r.status);
+}
+async function syncCycle(){
+  if(busy){ queued=true; return; }
+  busy=true; setSync('sync');
+  try{
+    const remote = await remoteGet();
+    let changed=false;
+    // adopt other devices' changes for cells we didn't just touch
+    Object.keys(remote).forEach(k=>{ if(!pending.has(k) && !done[k]){ done[k]=true; changed=true; } });
+    Object.keys(done).forEach(k=>{ if(!pending.has(k) && !remote[k]){ delete done[k]; changed=true; } });
+    // push our pending local changes (merged on top of latest remote)
+    const snap=[...pending];
+    if(snap.length){ await remotePut({...done}); snap.forEach(k=>pending.delete(k)); }
+    if(changed){ saveDone(); render(); }
+    setSync('ok');
+  }catch(e){
+    setSync('off');
+  }finally{
+    busy=false;
+    if(queued){ queued=false; syncCycle(); }
+  }
 }
 
 function showToast(msg){
@@ -473,8 +535,9 @@ document.getElementById('onlyMine').addEventListener('change',e=>{
   onlyMine=e.target.checked; render();
 });
 document.getElementById('resetBtn').addEventListener('click',()=>{
-  if(confirm("לאפס את כל הסימונים? הפעולה תמחק את כל ה־✓ שסימנתם.")){
-    done={}; saveDone(); render(); showToast("כל הסימונים אופסו");
+  if(confirm("לאפס את כל הסימונים עבור כולם? הפעולה תמחק את כל ה־✓ מהלוח המשותף.")){
+    Object.keys(done).forEach(k=>pending.add(k));
+    done={}; saveDone(); render(); syncCycle(); showToast("כל הסימונים אופסו");
   }
 });
 
@@ -482,6 +545,11 @@ document.getElementById('resetBtn').addEventListener('click',()=>{
 buildChips();
 buildDays();
 render();
+
+/* first pull from cloud + live polling */
+syncCycle();
+setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); }, 7000);
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') syncCycle(); });
 </script>
 </body>
 </html>
