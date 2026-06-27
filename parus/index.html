@@ -9,6 +9,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="פארוס 2026">
 <title>תורנות פארוס 2026</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Frank+Ruhl+Libre:wght@600;800;900&family=Assistant:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -192,6 +195,20 @@
   .sheet-btn.primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px rgba(14,77,146,.3)}
   .sheet-btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
   .sheet-btn.danger{background:#fdecea;color:#c0392b}
+  .sheet-btn.share{background:linear-gradient(135deg,#25d366,#1aa851);color:#fff;box-shadow:0 8px 20px rgba(37,211,102,.3)}
+  .sheet-row{display:flex;align-items:center;justify-content:space-between;padding:13px 4px 4px;font-weight:700;font-size:1rem}
+  .switch2{position:relative;width:46px;height:27px;background:#cfd8e0;border-radius:999px;transition:.2s;flex:none}
+  .switch2 i{position:absolute;top:3px;right:3px;width:21px;height:21px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+  .switch2 input{display:none}
+  .switch2 input:checked + i{transform:translateX(-19px)}
+  .switch2:has(input:checked){background:var(--done)}
+  .pk-share{display:block;margin:14px auto 0;background:linear-gradient(135deg,#25d366,#1aa851);color:#fff;
+    font-weight:700;font-size:.92rem;padding:11px 22px;border-radius:999px;box-shadow:0 8px 20px rgba(37,211,102,.35)}
+  .bigwin{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.7);z-index:85;
+    background:linear-gradient(135deg,var(--gold-2),#b8902f);color:#fff;padding:20px 26px;border-radius:22px;
+    font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.3rem;text-align:center;max-width:86vw;
+    box-shadow:0 24px 60px rgba(184,144,47,.5);opacity:0;pointer-events:none;transition:.45s cubic-bezier(.34,1.56,.64,1)}
+  .bigwin.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 
   #toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + 26px);transform:translateX(-50%) translateY(24px);
     background:var(--ink);color:#fff;padding:13px 22px;border-radius:999px;font-size:.95rem;font-weight:700;
@@ -270,6 +287,7 @@
   <div class="pk-grid" id="pkGrid"></div>
   <div class="pk-foot">
     <button class="pk-guest" id="guestBtn">רק לצפות בלו״ז המלא →</button>
+    <button class="pk-share" id="pkShare">📲 שיתוף עם המשפחה</button>
   </div>
   <div class="waves pk-waves"><div class="w w1"></div><div class="w w2"></div></div>
 </div>
@@ -309,7 +327,10 @@
     <div class="grab"></div>
     <h3>הגדרות</h3>
     <p class="sub" id="sheetSub"></p>
+    <button class="sheet-btn share" id="shareBtn">📲 שיתוף בוואטסאפ</button>
     <button class="sheet-btn primary" id="changeMe">החלפת משתמש</button>
+    <button class="sheet-btn ghost" id="installBtn">📥 הוספה למסך הבית</button>
+    <label class="sheet-row"><span>🔊 צלילים</span><span class="switch2"><input type="checkbox" id="soundToggle"><i></i></span></label>
     <button class="sheet-btn ghost" id="closeSheet">סגירה</button>
   </div>
 </div>
@@ -550,10 +571,44 @@ function afterToggle(k,nowDone){
   if(navigator.vibrate) navigator.vibrate(nowDone?18:8);
   render();
   if(nowDone){
-    showToast("יופי! התורנות סומנה ✓");
-    if(self){ const l=dutiesOf(self); if(l.length && l.every(x=>done[key(x.ti,x.di)])) confetti(); }
+    const all = self && (function(){ const l=dutiesOf(self); return l.length && l.every(x=>done[key(x.ti,x.di)]); })();
+    if(all){ celebrate(); }
+    else { soundDone(); showToast("יופי! התורנות סומנה ✓"); }
   }
   syncCycle();
+}
+
+/* ============ sound ============ */
+const SOUND_KEY="parus2026-sound";
+let soundOn = localStorage.getItem(SOUND_KEY)!=='0';
+let actx;
+function audio(){ if(!actx){ try{ actx=new (window.AudioContext||window.webkitAudioContext)(); }catch(e){} }
+  if(actx && actx.state==='suspended') actx.resume(); return actx; }
+function blip(freq,dur,when,type,gain){
+  if(!soundOn) return; const a=audio(); if(!a) return;
+  const o=a.createOscillator(),g=a.createGain(); o.type=type||'sine'; o.frequency.value=freq;
+  o.connect(g); g.connect(a.destination); const t=a.currentTime+(when||0);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(gain||0.16,t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.start(t); o.stop(t+dur+0.04);
+}
+function soundDone(){ blip(659,0.13,0,'sine',0.15); blip(988,0.17,0.08,'sine',0.12); }
+function soundFanfare(){ [523,659,784,1047].forEach((f,i)=>blip(f,0.34,i*0.12,'triangle',0.18)); blip(1568,0.55,0.52,'sine',0.10); }
+
+/* ============ share & install ============ */
+const SHARE_URL="https://tinyurl.com/22bg5mlu";
+function shareApp(){
+  const text="לו״ז תורנות פארוס 2026 🏛️\nסמנו את התורנויות שלכם כאן:";
+  if(navigator.share){ navigator.share({title:'תורנות פארוס 2026',text,url:SHARE_URL}).catch(()=>{}); }
+  else { window.open('https://wa.me/?text='+encodeURIComponent(text+" "+SHARE_URL),'_blank'); }
+}
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); deferredPrompt=e; });
+function installApp(){
+  if(deferredPrompt){ deferredPrompt.prompt(); deferredPrompt.userChoice.finally(()=>{deferredPrompt=null;}); return; }
+  const iOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  alert(iOS
+    ? "להוספה למסך הבית (אייפון):\n1️⃣ הקישו על כפתור השיתוף ⬆️ בתחתית הדפדפן\n2️⃣ בחרו \"הוסף למסך הבית\""
+    : "להוספה למסך הבית:\nפתחו את תפריט הדפדפן (⋮) ובחרו \"הוסף למסך הבית\".");
 }
 
 /* ============ cloud sync ============ */
@@ -580,9 +635,19 @@ async function syncCycle(){
 /* ============ ui bits ============ */
 function showToast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show');
   clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.classList.remove('show'),1700); }
-function confetti(){
-  const c=$('confetti'); const cols=['#c8a14a','#e2c879','#0e4d92','#1769b5','#ffffff','#1ea672'];
-  for(let i=0;i<90;i++){ const d=document.createElement('div'); d.className='cf';
+function celebrate(){
+  confetti(170); soundFanfare();
+  if(navigator.vibrate) navigator.vibrate([30,40,30,40,70]);
+  bigBanner("🎉 כל הכבוד! סיימת את כל התורנויות שלך");
+}
+function bigBanner(msg){
+  const e=document.createElement('div'); e.className='bigwin'; e.textContent=msg; document.body.appendChild(e);
+  requestAnimationFrame(()=>e.classList.add('show'));
+  setTimeout(()=>{ e.classList.remove('show'); setTimeout(()=>e.remove(),450); },2800);
+}
+function confetti(n){
+  n=n||90; const c=$('confetti'); const cols=['#c8a14a','#e2c879','#0e4d92','#1769b5','#ffffff','#1ea672'];
+  for(let i=0;i<n;i++){ const d=document.createElement('div'); d.className='cf';
     d.style.left=Math.random()*100+'vw';
     d.style.background=cols[i%cols.length];
     d.style.transform=`translateY(0) rotate(${Math.random()*360}deg)`;
@@ -599,10 +664,15 @@ function closeSheet(){ $('sheet').classList.remove('show'); }
 
 /* ============ events ============ */
 $('guestBtn').onclick=guest;
+$('pkShare').onclick=shareApp;
 $('meChip').onclick=openSheet;
 $('scrim').onclick=closeSheet;
 $('closeSheet').onclick=closeSheet;
 $('changeMe').onclick=()=>{ closeSheet(); openPicker(); };
+$('shareBtn').onclick=shareApp;
+$('installBtn').onclick=installApp;
+$('soundToggle').checked=soundOn;
+$('soundToggle').onchange=e=>{ soundOn=e.target.checked; localStorage.setItem(SOUND_KEY,soundOn?'1':'0'); if(soundOn) soundDone(); };
 document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ view=b.dataset.v; animateNext=true; syncSeg(); render(); });
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') syncCycle(); });
 setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); },7000);
