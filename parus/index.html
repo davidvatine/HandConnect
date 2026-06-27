@@ -2,554 +2,525 @@
 <html lang="he" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0e4d92">
-<title>לו״ז תורנות פארוס 2026</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="פארוס 2026">
+<title>תורנות פארוס 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Frank+Ruhl+Libre:wght@500;700;900&family=Assistant:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Frank+Ruhl+Libre:wght@600;800;900&family=Assistant:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --blue:#0e4d92;          /* aegean deep blue */
-    --blue-2:#1769b5;
-    --blue-soft:#e7f0fa;
-    --gold:#c8a951;
-    --gold-soft:#efe3c0;
-    --ink:#16263a;
-    --muted:#6c7c8c;
-    --paper:#fbfaf6;         /* warm marble white */
-    --line:#e4e0d4;
-    --done:#2e8b57;
-    --shadow:0 10px 30px rgba(14,77,146,.10), 0 2px 8px rgba(0,0,0,.05);
-    --radius:18px;
+    --blue:#0e4d92; --blue-2:#1769b5; --blue-deep:#0a3a70;
+    --blue-soft:#eaf2fb; --gold:#c8a14a; --gold-2:#e2c879; --gold-soft:#f3ead0;
+    --ink:#15263a; --muted:#7c8b9a; --line:#eceadf;
+    --paper:#f6f7f5; --done:#1ea672; --done-soft:#e6f7ef;
+    --r:22px; --sh:0 12px 30px rgba(14,77,146,.10),0 3px 10px rgba(0,0,0,.05);
+    --sh-lg:0 22px 50px rgba(14,77,146,.20);
+    --safe-t:env(safe-area-inset-top,0px); --safe-b:env(safe-area-inset-bottom,0px);
   }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html{scroll-behavior:smooth}
+  html,body{height:100%}
   body{
     font-family:'Assistant',-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    color:var(--ink);
+    color:var(--ink);background:var(--paper);
+    -webkit-font-smoothing:antialiased;overscroll-behavior-y:none;
+  }
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.6;
     background:
-      radial-gradient(1200px 600px at 50% -200px, #ffffff 0%, var(--paper) 60%),
-      var(--paper);
-    min-height:100vh;
-    line-height:1.5;
-  }
-  /* faint marble veins */
-  body::before{
-    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
-    background-image:
-      radial-gradient(circle at 15% 20%, rgba(14,77,146,.04), transparent 35%),
-      radial-gradient(circle at 85% 60%, rgba(200,169,81,.05), transparent 40%),
-      radial-gradient(circle at 50% 90%, rgba(14,77,146,.03), transparent 45%);
-  }
-  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:0 16px 80px;}
+      radial-gradient(900px 500px at 50% -260px,#fff,transparent 70%),
+      radial-gradient(circle at 12% 8%,rgba(14,77,146,.05),transparent 38%),
+      radial-gradient(circle at 90% 30%,rgba(200,161,74,.06),transparent 42%);}
+  .meander{height:16px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='16' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L0 4 L34 4 L34 14 L12 14 L12 9 L24 9 L24 18 Z M34 4 L40 4 L40 18 L44 18' fill='none' stroke='%23c8a14a' stroke-width='2'/%3E%3C/svg%3E");background-repeat:repeat-x;background-position:center;opacity:.7}
 
-  /* ---------- Greek meander divider ---------- */
-  .meander{
-    height:22px;width:100%;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L0 4 L34 4 L34 14 L12 14 L12 9 L24 9 L24 18 Z M34 4 L40 4 L40 18 L44 18' fill='none' stroke='%23c8a951' stroke-width='2'/%3E%3C/svg%3E");
-    background-repeat:repeat-x;
-    background-position:center;
-    opacity:.8;
-  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  .hidden{display:none!important}
 
-  /* ---------- Header ---------- */
-  header{
-    text-align:center;
-    padding:34px 0 22px;
+  /* ============ ONBOARDING / PICKER ============ */
+  #picker{
+    position:fixed;inset:0;z-index:60;background:
+      linear-gradient(180deg,#0e4d92 0%,#0a3a70 100%);
+    color:#fff;display:flex;flex-direction:column;
+    padding:calc(var(--safe-t) + 26px) 20px calc(var(--safe-b) + 24px);
+    overflow-y:auto;animation:fade .4s ease;
   }
-  .pillar{font-size:2rem;letter-spacing:.4em;margin-right:.4em}
-  .eyebrow{
-    font-family:'Cinzel',serif;font-weight:700;
-    letter-spacing:.42em;color:var(--gold);
-    font-size:.78rem;margin-bottom:6px;text-transform:uppercase;
-  }
-  h1{
-    font-family:'Frank Ruhl Libre',serif;font-weight:900;
-    font-size:clamp(2rem,8vw,3.2rem);color:var(--blue);
-    line-height:1.05;letter-spacing:-.01em;
-  }
-  .year{
-    font-family:'Cinzel',serif;font-weight:900;
-    font-size:clamp(2.4rem,11vw,4rem);
-    background:linear-gradient(180deg,var(--gold) 0%,#a98730 100%);
-    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
-    letter-spacing:.06em;line-height:1;margin-top:2px;
-    text-shadow:0 2px 0 rgba(0,0,0,.02);
-  }
-  .tagline{color:var(--muted);font-size:.98rem;margin-top:12px;font-weight:400}
-  .sync{display:inline-flex;align-items:center;gap:7px;margin-top:12px;font-size:.78rem;
-    font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);
-    padding:5px 12px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.04)}
-  .sync i{width:8px;height:8px;border-radius:50%;background:#c9ad5a;flex:none;
-    box-shadow:0 0 0 0 rgba(46,139,87,.5)}
-  .sync.ok i{background:var(--done);animation:pulse 2s infinite}
-  .sync.ok span{color:var(--done)}
-  .sync.sync i{background:#e0a915;animation:spin .9s linear infinite}
-  .sync.off i{background:#c0392b}
-  .sync.off span{color:#c0392b}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,139,87,.45)}70%{box-shadow:0 0 0 7px rgba(46,139,87,0)}100%{box-shadow:0 0 0 0 rgba(46,139,87,0)}}
-  @keyframes spin{to{transform:scale(1.15)}}
+  #picker .gk{position:absolute;inset:0;opacity:.06;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L0 4 L34 4 L34 14 L12 14 L12 9 L24 9 L24 18 Z M34 4 L40 4 L40 18 L44 18' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E");}
+  .pk-head{text-align:center;position:relative;margin-bottom:22px}
+  .pk-pillar{font-size:2.4rem}
+  .pk-eyebrow{font-family:'Cinzel',serif;font-weight:600;letter-spacing:.4em;
+    font-size:.72rem;color:var(--gold-2);margin-top:6px}
+  .pk-title{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:2.1rem;margin-top:10px}
+  .pk-sub{color:rgba(255,255,255,.72);font-size:1rem;margin-top:6px;font-weight:300}
+  .pk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px;max-width:460px;
+    width:100%;margin:6px auto 0}
+  .pk-person{display:flex;flex-direction:column;align-items:center;gap:9px;
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+    border-radius:18px;padding:16px 6px 13px;transition:.18s;backdrop-filter:blur(4px)}
+  .pk-person:active{transform:scale(.94);background:rgba(255,255,255,.16)}
+  .pk-name{font-size:.96rem;font-weight:700;color:#fff}
+  .avatar{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:1.3rem;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.25);
+    border:2px solid rgba(255,255,255,.35);font-family:'Frank Ruhl Libre',serif}
+  .pk-foot{margin-top:auto;padding-top:26px;text-align:center}
+  .pk-guest{color:rgba(255,255,255,.7);font-size:.92rem;text-decoration:underline;
+    text-underline-offset:4px;padding:10px}
+  .pk-reset{display:block;margin:14px auto 0;color:rgba(255,255,255,.45);font-size:.8rem;padding:6px}
 
-  /* ---------- Controls ---------- */
-  .controls{
-    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);padding:16px;margin-top:8px;
-    position:sticky;top:8px;z-index:20;backdrop-filter:saturate(1.2);
+  /* ============ APP ============ */
+  #app{position:relative;z-index:1;min-height:100%;display:flex;flex-direction:column}
+  .appbar{
+    position:sticky;top:0;z-index:30;
+    background:rgba(246,247,245,.82);backdrop-filter:saturate(1.4) blur(14px);
+    -webkit-backdrop-filter:saturate(1.4) blur(14px);
+    padding:calc(var(--safe-t) + 12px) 16px 12px;border-bottom:1px solid var(--line);
   }
-  .search-row{position:relative;display:flex;align-items:center}
-  .search-row svg{position:absolute;right:14px;width:18px;height:18px;fill:var(--muted);pointer-events:none}
-  #search{
-    width:100%;padding:13px 44px 13px 14px;font-size:1rem;font-family:inherit;
-    border:1.5px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);
-    transition:border-color .2s, box-shadow .2s;
-  }
-  #search:focus{outline:none;border-color:var(--blue-2);box-shadow:0 0 0 4px rgba(23,105,181,.12);background:#fff}
-  #search::placeholder{color:#9aa7b2}
+  .appbar-row{display:flex;align-items:center;gap:12px;max-width:680px;margin:0 auto}
+  .me-chip{display:flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);
+    padding:5px 12px 5px 6px;border-radius:999px;box-shadow:var(--sh);transition:.15s}
+  .me-chip:active{transform:scale(.96)}
+  .me-chip .avatar{width:34px;height:34px;font-size:.95rem;border-width:1.5px;box-shadow:0 3px 8px rgba(0,0,0,.18)}
+  .me-chip .nm{font-weight:700;font-size:.95rem}
+  .me-chip .sw{font-size:.7rem;color:var(--muted);margin-right:2px}
+  .appbar .brand{margin-right:auto;text-align:left;line-height:1}
+  .appbar .brand .b1{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.05rem;color:var(--blue)}
+  .appbar .brand .b2{font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:.2em;color:var(--gold);margin-top:2px}
+  .sync{display:flex;align-items:center;gap:6px;font-size:.72rem;font-weight:600;color:var(--muted);margin-right:4px}
+  .sync i{width:8px;height:8px;border-radius:50%;background:var(--gold);flex:none}
+  .sync.ok i{background:var(--done);animation:pulse 2.2s infinite}.sync.ok span{color:var(--done)}
+  .sync.sync i{background:#e0a915;animation:blink 1s infinite}
+  .sync.off i{background:#c0392b}.sync.off span{color:#c0392b}
 
-  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
-  .chip{
-    font-family:inherit;font-size:.82rem;font-weight:600;
-    padding:7px 13px;border-radius:999px;cursor:pointer;
-    border:1.5px solid var(--line);background:#fff;color:var(--ink);
-    transition:.18s;white-space:nowrap;
-  }
-  .chip:hover{border-color:var(--blue-2);color:var(--blue)}
-  .chip.active{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(14,77,146,.25)}
+  .seg{display:flex;gap:4px;background:#e9ebe6;border-radius:14px;padding:4px;max-width:680px;margin:12px auto 0}
+  .seg button{flex:1;padding:9px;border-radius:11px;font-weight:700;font-size:.92rem;color:var(--muted);transition:.2s}
+  .seg button.on{background:#fff;color:var(--blue);box-shadow:0 3px 10px rgba(0,0,0,.10)}
 
-  .toolbar{display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap}
-  .toggle{
-    display:inline-flex;align-items:center;gap:8px;cursor:pointer;
-    font-size:.88rem;color:var(--ink);font-weight:600;user-select:none;
-  }
-  .switch{position:relative;width:42px;height:24px;background:#cfd8e0;border-radius:999px;transition:.2s;flex:none}
-  .switch::after{content:"";position:absolute;top:3px;right:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
-  .toggle input{display:none}
-  .toggle input:checked + .switch{background:var(--blue)}
-  .toggle input:checked + .switch::after{transform:translateX(-18px)}
-  .spacer{flex:1}
-  .btn-ghost{
-    font-family:inherit;font-size:.82rem;font-weight:600;color:var(--muted);
-    background:transparent;border:none;cursor:pointer;padding:6px 8px;border-radius:8px;
-  }
-  .btn-ghost:hover{color:#c0392b;background:#fce9e7}
+  main{flex:1;max-width:680px;width:100%;margin:0 auto;padding:18px 16px calc(var(--safe-b) + 90px)}
 
-  /* ---------- Progress ---------- */
-  .progress-card{
-    background:linear-gradient(135deg,var(--blue) 0%,#0a3b71 100%);
-    color:#fff;border-radius:var(--radius);padding:18px 20px;margin-top:16px;
-    box-shadow:0 12px 30px rgba(14,77,146,.28);position:relative;overflow:hidden;
-  }
-  .progress-card .gk{position:absolute;inset:0;opacity:.10;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L0 4 L34 4 L34 14 L12 14 L12 9 L24 9 L24 18 Z M34 4 L40 4 L40 18 L44 18' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E");background-repeat:repeat;}
-  .progress-head{display:flex;justify-content:space-between;align-items:baseline;position:relative}
-  .progress-head .lbl{font-size:.9rem;opacity:.9}
-  .progress-head .num{font-family:'Cinzel',serif;font-weight:700;font-size:1.5rem}
-  .bar{height:12px;background:rgba(255,255,255,.22);border-radius:999px;margin-top:12px;overflow:hidden;position:relative}
-  .bar > i{display:block;height:100%;width:0;border-radius:999px;
-    background:linear-gradient(90deg,var(--gold),#f3dd97);transition:width .5s cubic-bezier(.22,1,.36,1)}
-  .progress-sub{font-size:.82rem;opacity:.85;margin-top:8px;position:relative}
+  /* hero (my view) */
+  .hero{background:linear-gradient(135deg,#0e4d92,#0a3a70);color:#fff;border-radius:26px;
+    padding:22px;box-shadow:var(--sh-lg);position:relative;overflow:hidden;display:flex;gap:18px;align-items:center}
+  .hero .gk{position:absolute;inset:0;opacity:.09;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='44' height='22' viewBox='0 0 44 22'%3E%3Cpath d='M0 18 L0 4 L34 4 L34 14 L12 14 L12 9 L24 9 L24 18 Z M34 4 L40 4 L40 18 L44 18' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E")}
+  .hero .greet{position:relative;flex:1;min-width:0}
+  .hero .hi{font-size:1rem;opacity:.85;font-weight:300}
+  .hero .who{font-family:'Frank Ruhl Libre',serif;font-weight:900;font-size:1.9rem;line-height:1.1;margin-top:2px}
+  .hero .msg{font-size:.9rem;opacity:.9;margin-top:10px}
+  .ring{position:relative;width:104px;height:104px;border-radius:50%;flex:none;
+    background:conic-gradient(var(--gold-2) calc(var(--p,0)*3.6deg),rgba(255,255,255,.22) 0);
+    transition:background .6s cubic-bezier(.22,1,.36,1)}
+  .ring .hole{position:absolute;inset:11px;background:#0c4280;border-radius:50%;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .ring .n{font-family:'Cinzel',serif;font-weight:800;font-size:1.7rem;color:#fff}
+  .ring .d{font-size:.72rem;color:rgba(255,255,255,.7);margin-top:3px}
 
-  /* ---------- Day cards ---------- */
-  .day{
-    background:#fff;border:1px solid var(--line);border-radius:var(--radius);
-    box-shadow:var(--shadow);margin-top:18px;overflow:hidden;
-  }
-  .day.dim{opacity:.55}
-  .day-head{
-    display:flex;align-items:center;gap:14px;
-    padding:16px 18px;background:var(--blue-soft);border-bottom:2px solid var(--gold-soft);
-  }
-  .date-badge{
-    flex:none;width:58px;height:58px;border-radius:14px;background:#fff;
-    border:1.5px solid var(--gold);display:flex;flex-direction:column;
-    align-items:center;justify-content:center;line-height:1;box-shadow:0 4px 10px rgba(200,169,81,.18)
-  }
-  .date-badge .d{font-family:'Cinzel',serif;font-weight:900;font-size:1.5rem;color:var(--blue)}
-  .date-badge .m{font-size:.66rem;color:var(--gold);font-weight:700;letter-spacing:.08em;margin-top:2px}
-  .day-head .meta .dow{font-family:'Frank Ruhl Libre',serif;font-weight:700;font-size:1.25rem;color:var(--ink)}
-  .day-head .meta .cnt{font-size:.82rem;color:var(--muted);margin-top:2px}
-  .day-prog{margin-right:auto;text-align:left;flex:none}
-  .ring{font-family:'Cinzel',serif;font-weight:700;font-size:.9rem;color:var(--blue)}
+  .day-label{display:flex;align-items:center;gap:10px;margin:22px 4px 10px}
+  .day-label .dl{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.15rem;color:var(--ink)}
+  .day-label .dd{font-size:.8rem;color:var(--muted);font-weight:600}
+  .day-label .ln{flex:1;height:1px;background:var(--line)}
 
-  .tasks{padding:6px 8px 10px}
-  .task{
-    display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;
-    transition:background .2s;cursor:pointer;position:relative;
-  }
-  .task + .task{border-top:1px solid #f1efe8}
-  .task:hover{background:var(--paper)}
-  .task.mine{background:linear-gradient(90deg,rgba(200,169,81,.14),rgba(200,169,81,.04));}
-  .task.mine::before{content:"";position:absolute;right:0;top:8px;bottom:8px;width:4px;border-radius:4px;background:var(--gold)}
-  .task.done .t-name,.task.done .t-who{text-decoration:line-through;color:var(--muted)}
-  .task.done{opacity:.7}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+  .duty{display:flex;align-items:center;gap:14px;padding:15px 16px;transition:.2s;position:relative}
+  .duty + .duty{border-top:1px solid #f3f1ea}
+  .duty:active{background:var(--paper)}
+  .duty.done{background:linear-gradient(90deg,var(--done-soft),#fff)}
+  .duty.done .d-task{text-decoration:line-through;color:var(--muted)}
+  .check{flex:none;width:42px;height:42px;border-radius:13px;border:2.5px solid #d4dce4;background:#fff;
+    display:flex;align-items:center;justify-content:center;transition:.22s cubic-bezier(.34,1.56,.64,1)}
+  .check svg{width:22px;height:22px;stroke:#fff;stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round;
+    stroke-dasharray:26;stroke-dashoffset:26;transition:stroke-dashoffset .3s ease .05s}
+  .duty.done .check{background:var(--done);border-color:var(--done);box-shadow:0 6px 16px rgba(30,166,114,.35);transform:scale(1.05)}
+  .duty.done .check svg{stroke-dashoffset:0}
+  .d-body{flex:1;min-width:0}
+  .d-task{font-weight:700;font-size:1.06rem}
+  .d-sub{font-size:.88rem;color:var(--blue);font-weight:600;margin-top:2px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .d-sub .with{color:var(--muted);font-weight:500}
+  .d-date{flex:none;width:50px;height:54px;border-radius:14px;background:var(--blue-soft);border:1px solid var(--gold-soft);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1}
+  .d-date .dn{font-family:'Cinzel',serif;font-weight:800;font-size:1.25rem;color:var(--blue)}
+  .d-date .dm{font-size:.62rem;color:var(--gold);font-weight:700;margin-top:2px}
 
-  .check{
-    flex:none;width:30px;height:30px;border-radius:9px;border:2px solid #cdd6df;background:#fff;
-    display:flex;align-items:center;justify-content:center;transition:.2s;
-  }
-  .check svg{width:18px;height:18px;stroke:#fff;stroke-width:3.4;fill:none;
-    stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .25s ease .05s}
-  .task.done .check{background:var(--done);border-color:var(--done);box-shadow:0 4px 12px rgba(46,139,87,.3)}
-  .task.done .check svg{stroke-dashoffset:0}
+  /* all view day card */
+  .allday{margin-bottom:16px}
+  .allday-head{display:flex;align-items:center;gap:13px;padding:14px 16px;background:var(--blue-soft);border-bottom:2px solid var(--gold-soft)}
+  .allday-head .d-date{background:#fff}
+  .allday-head .meta .dow{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.15rem}
+  .allday-head .meta .cnt{font-size:.78rem;color:var(--muted)}
+  .allday-head .pr{margin-right:auto;font-family:'Cinzel',serif;font-weight:700;font-size:.9rem;color:var(--blue)}
+  .mini{display:flex;align-items:center;gap:11px;padding:11px 14px}
+  .mini + .mini{border-top:1px solid #f3f1ea}
+  .mini:active{background:var(--paper)}
+  .mini.done .m-task,.mini.done .m-who{text-decoration:line-through;color:var(--muted)}
+  .mini.mine{background:linear-gradient(90deg,rgba(200,161,74,.13),transparent)}
+  .mini.mine::before{content:"";position:absolute;right:0;width:4px;top:8px;bottom:8px;border-radius:4px;background:var(--gold)}
+  .mini{position:relative}
+  .m-check{flex:none;width:30px;height:30px;border-radius:9px;border:2px solid #d4dce4;background:#fff;display:flex;align-items:center;justify-content:center;transition:.2s}
+  .m-check svg{width:17px;height:17px;stroke:#fff;stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .25s}
+  .mini.done .m-check{background:var(--done);border-color:var(--done)}
+  .mini.done .m-check svg{stroke-dashoffset:0}
+  .m-body{flex:1;min-width:0}
+  .m-task{font-weight:700;font-size:.98rem}
+  .m-who{font-size:.85rem;color:var(--blue);font-weight:600;margin-top:1px}
 
-  .t-body{flex:1;min-width:0}
-  .t-name{font-weight:700;font-size:1rem;color:var(--ink)}
-  .t-who{font-size:.9rem;color:var(--blue);font-weight:600;margin-top:1px;display:flex;align-items:center;gap:6px}
-  .t-who .who-ic{opacity:.55;font-weight:400}
-  .t-tag{flex:none;font-size:.62rem;font-weight:700;color:var(--gold);border:1px solid var(--gold-soft);
-    background:#fffdf6;border-radius:999px;padding:3px 8px;letter-spacing:.04em}
+  .empty{text-align:center;color:var(--muted);padding:50px 20px}
+  .empty .ic{font-size:3rem}
+  .empty .t{font-size:1.15rem;font-weight:700;margin-top:10px;color:var(--ink)}
+  .empty .s{font-size:.95rem;margin-top:6px}
 
-  .empty{display:none;text-align:center;color:var(--muted);padding:40px 20px;font-size:1rem}
-  .empty.show{display:block}
+  .celebrate{background:linear-gradient(135deg,var(--gold),#a9842f);color:#fff;border-radius:22px;padding:20px;
+    text-align:center;box-shadow:0 16px 40px rgba(200,161,74,.4);margin-bottom:18px}
+  .celebrate .e{font-size:2.4rem}
+  .celebrate .t{font-family:'Frank Ruhl Libre',serif;font-weight:800;font-size:1.4rem;margin-top:4px}
+  .celebrate .s{opacity:.92;margin-top:4px}
 
-  footer{text-align:center;margin-top:40px;color:var(--muted);font-size:.8rem}
-  footer .gk-line{margin-bottom:16px}
-  footer .sig{font-family:'Cinzel',serif;letter-spacing:.2em;color:var(--gold);margin-top:6px}
+  footer{text-align:center;color:var(--muted);font-size:.78rem;padding:24px 0 0}
+  footer .sig{font-family:'Cinzel',serif;letter-spacing:.2em;color:var(--gold);margin-top:8px}
 
-  /* little toast */
-  #toast{
-    position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);
-    background:var(--ink);color:#fff;padding:11px 20px;border-radius:999px;font-size:.9rem;
-    font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);opacity:0;pointer-events:none;
-    transition:.3s;z-index:100;
-  }
+  /* bottom sheet */
+  #sheet{position:fixed;inset:0;z-index:50;display:none;align-items:flex-end;justify-content:center}
+  #sheet.show{display:flex}
+  #sheet .scrim{position:absolute;inset:0;background:rgba(10,30,55,.45);animation:fade .25s}
+  #sheet .panel{position:relative;width:100%;max-width:680px;background:#fff;border-radius:26px 26px 0 0;
+    padding:10px 18px calc(var(--safe-b) + 22px);box-shadow:0 -10px 40px rgba(0,0,0,.25);animation:slideup .3s cubic-bezier(.22,1,.36,1)}
+  #sheet .grab{width:40px;height:5px;border-radius:999px;background:#dfe3df;margin:6px auto 14px}
+  #sheet h3{font-family:'Frank Ruhl Libre',serif;font-size:1.3rem;text-align:center;margin-bottom:4px}
+  #sheet p.sub{text-align:center;color:var(--muted);font-size:.9rem;margin-bottom:14px}
+  .sheet-btn{width:100%;padding:15px;border-radius:15px;font-weight:700;font-size:1rem;margin-top:10px;transition:.15s}
+  .sheet-btn:active{transform:scale(.98)}
+  .sheet-btn.primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px rgba(14,77,146,.3)}
+  .sheet-btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+  .sheet-btn.danger{background:#fdecea;color:#c0392b}
+
+  #toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + 26px);transform:translateX(-50%) translateY(24px);
+    background:var(--ink);color:#fff;padding:13px 22px;border-radius:999px;font-size:.95rem;font-weight:700;
+    box-shadow:0 10px 30px rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.32s cubic-bezier(.22,1,.36,1);z-index:80;max-width:88vw;text-align:center}
   #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-  @media (max-width:480px){
-    .wrap{padding:0 12px 70px}
-    .date-badge{width:50px;height:50px}
-    .date-badge .d{font-size:1.3rem}
-    .t-name{font-size:.95rem}
-  }
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:70;overflow:hidden}
+  .cf{position:absolute;top:-12px;width:10px;height:14px;border-radius:2px;will-change:transform,opacity}
+
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  @keyframes slideup{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(30,166,114,.5)}70%{box-shadow:0 0 0 7px rgba(30,166,114,0)}100%{box-shadow:0 0 0 0 rgba(30,166,114,0)}}
+  @keyframes blink{50%{opacity:.4}}
+  @keyframes cffall{to{transform:translateY(105vh) rotate(720deg);opacity:.9}}
+  @media (max-width:360px){.pk-grid{gap:12px 8px}.avatar{width:48px;height:48px;font-size:1.15rem}}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <header>
-    <div class="pillar">🏛️</div>
-    <div class="eyebrow">Parus &middot; Roster</div>
-    <h1>לו״ז תורנות פארוס</h1>
-    <div class="year">2026</div>
-    <p class="tagline">סמנו ✓ כשסיימתם את התורנות — מסונכרן בין כל המכשירים בזמן אמת</p>
-    <div class="sync" id="syncBadge"><i></i><span>מתחבר…</span></div>
-  </header>
+<!-- ===== PICKER / ONBOARDING ===== -->
+<div id="picker">
+  <div class="gk"></div>
+  <div class="pk-head">
+    <div class="pk-pillar">🏛️</div>
+    <div class="pk-eyebrow">PARUS · 2026</div>
+    <div class="pk-title">מי את/ה?</div>
+    <div class="pk-sub">בחרו את עצמכם כדי לראות את התורנויות שלכם</div>
+  </div>
+  <div class="pk-grid" id="pkGrid"></div>
+  <div class="pk-foot">
+    <button class="pk-guest" id="guestBtn">רק לצפות בלו״ז המלא →</button>
+    <button class="pk-reset" id="pkReset">איפוס כל הסימונים</button>
+  </div>
+</div>
 
-  <div class="meander"></div>
-
-  <div class="controls">
-    <div class="search-row">
-      <svg viewBox="0 0 24 24"><path d="M21 21l-4.3-4.3M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <input id="search" type="text" placeholder="חפשו את הזוג / השם שלכם…" autocomplete="off" inputmode="search">
+<!-- ===== APP ===== -->
+<div id="app" class="hidden">
+  <div class="appbar">
+    <div class="appbar-row">
+      <button class="me-chip" id="meChip">
+        <span class="avatar" id="meAv">·</span>
+        <span><span class="nm" id="meNm">אורח</span></span>
+        <span class="sw">החלפה ⇄</span>
+      </button>
+      <span class="sync" id="syncBadge"><i></i><span>מתחבר…</span></span>
+      <div class="brand"><div class="b1">תורנות פארוס</div><div class="b2">ΠΑΡΟΣ MMXXVI</div></div>
     </div>
-    <div class="chips" id="chips"></div>
-    <div class="toolbar">
-      <label class="toggle">
-        <input type="checkbox" id="onlyMine">
-        <span class="switch"></span>
-        <span>הצג רק את התורנויות שלי</span>
-      </label>
-      <span class="spacer"></span>
-      <button class="btn-ghost" id="resetBtn">איפוס סימונים</button>
+    <div class="seg" id="seg">
+      <button data-v="mine" class="on">התורנויות שלי</button>
+      <button data-v="all">כל הלו״ז</button>
     </div>
   </div>
 
-  <div class="progress-card">
-    <div class="gk"></div>
-    <div class="progress-head">
-      <span class="lbl" id="progLbl">סך הכל תורנויות שהושלמו</span>
-      <span class="num"><span id="progDone">0</span>/<span id="progTotal">0</span></span>
-    </div>
-    <div class="bar"><i id="progBar"></i></div>
-    <div class="progress-sub" id="progSub">בהצלחה! 💪</div>
+  <main>
+    <div id="viewMine"></div>
+    <div id="viewAll" class="hidden"></div>
+    <footer>
+      <div class="meander" style="opacity:.5;margin-bottom:12px"></div>
+      הלו״ז שמור במדויק לפי הרשימה המקורית
+      <div class="sig">ΠΑΡΟΣ · 2026</div>
+    </footer>
+  </main>
+</div>
+
+<!-- ===== SHEET ===== -->
+<div id="sheet">
+  <div class="scrim" id="scrim"></div>
+  <div class="panel">
+    <div class="grab"></div>
+    <h3>הגדרות</h3>
+    <p class="sub" id="sheetSub"></p>
+    <button class="sheet-btn primary" id="changeMe">החלפת משתמש</button>
+    <button class="sheet-btn danger" id="resetAll">איפוס כל הסימונים (לכולם)</button>
+    <button class="sheet-btn ghost" id="closeSheet">סגירה</button>
   </div>
-
-  <div id="days"></div>
-  <div class="empty" id="empty">לא נמצאו תורנויות עבור השם הזה 🤷</div>
-
-  <footer>
-    <div class="meander gk-line"></div>
-    <div>לו״ז התורנות נשמר במדויק לפי הרשימה המקורית.</div>
-    <div class="sig">ΠΑΡΟΣ &middot; 2026</div>
-  </footer>
-
 </div>
 
 <div id="toast"></div>
+<div id="confetti"></div>
 
 <script>
 /* ============================================================
    נתוני הלו״ז — מועתקים 1:1 מהרשימה המקורית
    ============================================================ */
 const DATES = ["7.7","8.7","9.7","10.7","11.7","12.7"];
-
-const TASKS = [
-  "סופר",
-  "ארוחת בוקר",
-  "פינוי בוקר",
-  "מדיח בוקר",
-  "עריכת שולחן בוקר",
-  "ארוחת ערב",
-  "פינוי ערב",
-  "מדיח ערב",
-  "עריכת שולחן ערב",
-  "אסיפת ותליית מגבות"
-];
-
-/* schedule[taskIndex][dateIndex]  — סדר התאריכים: 7.7, 8.7, 9.7, 10.7, 11.7, 12.7 */
+const TASKS = ["סופר","ארוחת בוקר","פינוי בוקר","מדיח בוקר","עריכת שולחן בוקר",
+               "ארוחת ערב","פינוי ערב","מדיח ערב","עריכת שולחן ערב","אסיפת ותליית מגבות"];
+/* schedule[task][date] — סדר התאריכים: 7.7,8.7,9.7,10.7,11.7,12.7 */
 const SCHEDULE = [
-  ["דוד ומור",   "אליה ויורם",  "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     "אליה ויורם"],   // סופר
-  ["אליה ויורם", "דוד ומור",    "שני ועמיחי",  "שירה ואביחי", "פפי והנכדים",  "שירה ואביחי"],  // ארוחת בוקר
-  ["שירה ואביחי","שני ועמיחי",  "אליה ויורם",  "דוד ומור",    "אליה ויורם",   "דוד ומור"],     // פינוי בוקר
-  ["שני ועמיחי", "שירה ואביחי", "דוד ומור",    "אליה ויורם",  "שירה ואביחי",  "אליה ויורם"],   // מדיח בוקר
-  ["דריה ובר",   "עמית וליהיא", "רוי ודריה",   "אמילי ועמית", "דריה ועמית",   "ליהיא ובר"],    // עריכת שולחן בוקר
-  ["שירה ואביחי","שני ועמיחי",  "אליה ויורם",  "מאמי",        "אליה ויורם",   "דוד ומור"],     // ארוחת ערב
-  ["שני ועמיחי", "אליה ויורם",  "שני ועמיחי",  "שני ועמיחי",  "שירה ואביחי",  "אליה ויורם"],   // פינוי ערב
-  ["דוד ומור",   "דוד ומור",    "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     "שירה ואביחי"],  // מדיח ערב
-  ["רוי וליהיא", "דריה ואמילי", "עמית וליהיא", "רוי ובר",     "ליהיא ובר",    "דריה ועמית"],   // עריכת שולחן ערב
-  ["עמית ואמילי","רוי ובר",     "אמילי ובר",   "דריה וליהיא", "דריה ובר",     "עמית וליהיא"]   // אסיפת ותליית מגבות
+  ["דוד ומור",   "אליה ויורם",  "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     "אליה ויורם"],
+  ["אליה ויורם", "דוד ומור",    "שני ועמיחי",  "שירה ואביחי", "פפי והנכדים",  "שירה ואביחי"],
+  ["שירה ואביחי","שני ועמיחי",  "אליה ויורם",  "דוד ומור",    "אליה ויורם",   "דוד ומור"],
+  ["שני ועמיחי", "שירה ואביחי", "דוד ומור",    "אליה ויורם",  "שירה ואביחי",  "אליה ויורם"],
+  ["דריה ובר",   "עמית וליהיא", "רוי ודריה",   "אמילי ועמית", "דריה ועמית",   "ליהיא ובר"],
+  ["שירה ואביחי","שני ועמיחי",  "אליה ויורם",  "מאמי",        "אליה ויורם",   "דוד ומור"],
+  ["שני ועמיחי", "אליה ויורם",  "שני ועמיחי",  "שני ועמיחי",  "שירה ואביחי",  "אליה ויורם"],
+  ["דוד ומור",   "דוד ומור",    "שירה ואביחי", "שני ועמיחי",  "דוד ומור",     "שירה ואביחי"],
+  ["רוי וליהיא", "דריה ואמילי", "עמית וליהיא", "רוי ובר",     "ליהיא ובר",    "דריה ועמית"],
+  ["עמית ואמילי","רוי ובר",     "אמילי ובר",   "דריה וליהיא", "דריה ובר",     "עמית וליהיא"]
 ];
+const HEB_DOW  = ["יום ראשון","יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","שבת"];
 
-/* כפתורי הסינון לפי זוגות — נגזרים אוטומטית מהלו״ז (ייחודיים, לפי סדר הופעה) */
-const PAIRS = [...new Set(SCHEDULE.flat())];
-
-const HEB_DOW = ["יום ראשון","יום שני","יום שלישי","יום רביעי","יום חמישי","יום שישי","שבת"];
+/* פיצול זוג לאנשים בודדים: "דוד ומור" → ["דוד","מור"] */
+function splitPair(s){ return s.split(/\s+ו/).map(x=>x.trim()).filter(Boolean); }
+const PEOPLE = [...new Set(SCHEDULE.flat().flatMap(splitPair))].sort((a,b)=>a.localeCompare(b,'he'));
 
 /* ============================================================
-   סנכרון ענן משותף — כל המכשירים רואים את אותו לוח
-   (אחסון JSON חינמי, ללא צורך בהתחברות; localStorage כגיבוי)
+   סנכרון ענן משותף + מצב
    ============================================================ */
-const SYNC_URL = "https://api.restful-api.dev/objects/ff8081819d82fab6019f0a4858bd6c80";
-let pending = new Set();   // שינויים מקומיים שטרם נשמרו לענן
-let busy = false, queued = false;
-
+const SYNC_URL  = "https://api.restful-api.dev/objects/ff8081819d82fab6019f0a4858bd6c80";
 const STORE_KEY = "parus2026-done-v1";
+const SELF_KEY  = "parus2026-self-v1";
 let done = loadDone();
-let query = "";
-let onlyMine = false;
+let self = localStorage.getItem(SELF_KEY) || null;
+let view = "mine";
+let pending = new Set(), busy=false, queued=false;
 
-function loadDone(){
-  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; }
-  catch(e){ return {}; }
+function loadDone(){ try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return {}} }
+function saveDone(){ try{localStorage.setItem(STORE_KEY,JSON.stringify(done))}catch(e){} }
+function key(ti,di){ return ti+"_"+di }
+function dow(date){ const[d,m]=date.split(".").map(Number); return HEB_DOW[new Date(2026,m-1,d).getDay()] }
+
+/* avatar color from name */
+function hue(name){ let h=0; for(const c of name) h=(h*31+c.charCodeAt(0))%360; return h }
+function avatarStyle(name){ const h=hue(name); return `background:linear-gradient(135deg,hsl(${h},55%,52%),hsl(${(h+40)%360},58%,42%))` }
+function initial(name){ return name.charAt(0) }
+
+/* my duties across all pairs */
+function dutiesOf(person){
+  const out=[];
+  SCHEDULE.forEach((row,ti)=>row.forEach((who,di)=>{
+    if(splitPair(who).includes(person)) out.push({ti,di,who,task:TASKS[ti],date:DATES[di]});
+  }));
+  return out;
 }
-function saveDone(){
-  try{ localStorage.setItem(STORE_KEY, JSON.stringify(done)); }catch(e){}
-}
-function key(ti,di){ return ti+"_"+di; }
-function dowFor(dateStr){
-  const [d,m] = dateStr.split(".").map(Number);
-  return HEB_DOW[ new Date(2026, m-1, d).getDay() ];
-}
-function matches(who){
-  if(!query) return false;
-  return who.indexOf(query) !== -1;
+function partnersText(who,person){
+  const others=splitPair(who).filter(x=>x!==person);
+  return others.length? "עם "+others.join(" ו") : "לבד";
 }
 
-/* ---------- build the UI ---------- */
-const daysEl = document.getElementById('days');
-const chipsEl = document.getElementById('chips');
+/* ============ rendering ============ */
+const $=id=>document.getElementById(id);
 
-function buildChips(){
-  PAIRS.forEach(name=>{
-    const b = document.createElement('button');
-    b.className='chip';
-    b.textContent=name;
-    b.dataset.name=name;
-    b.addEventListener('click',()=>{
-      if(query===name){ query=""; document.getElementById('search').value=""; }
-      else{ query=name; document.getElementById('search').value=name; }
-      render();
-    });
-    chipsEl.appendChild(b);
+function buildPicker(){
+  const g=$('pkGrid'); g.innerHTML="";
+  PEOPLE.forEach(name=>{
+    const b=document.createElement('button');
+    b.className='pk-person';
+    b.innerHTML=`<span class="avatar" style="${avatarStyle(name)}">${initial(name)}</span><span class="pk-name">${name}</span>`;
+    b.onclick=()=>chooseSelf(name);
+    g.appendChild(b);
   });
 }
+function chooseSelf(name){
+  self=name; localStorage.setItem(SELF_KEY,name);
+  view='mine';
+  $('picker').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  syncSeg(); renderMe(); render(); syncCycle();
+}
+function openPicker(){ buildPicker(); $('picker').classList.remove('hidden'); }
+function guest(){
+  self=null; localStorage.removeItem(SELF_KEY); view='all';
+  $('picker').classList.add('hidden'); $('app').classList.remove('hidden');
+  syncSeg(); renderMe(); render(); syncCycle();
+}
 
-function buildDays(){
-  daysEl.innerHTML="";
+function renderMe(){
+  if(self){
+    $('meAv').textContent=initial(self); $('meAv').setAttribute('style',avatarStyle(self));
+    $('meNm').textContent=self;
+  }else{
+    $('meAv').textContent='👁'; $('meAv').setAttribute('style','background:#9aa7b2');
+    $('meNm').textContent='אורח';
+  }
+}
+
+function syncSeg(){
+  document.querySelectorAll('#seg button').forEach(b=>b.classList.toggle('on',b.dataset.v===view));
+  $('viewMine').classList.toggle('hidden',view!=='mine');
+  $('viewAll').classList.toggle('hidden',view!=='all');
+}
+
+function render(){ view==='mine'?renderMineView():renderAllView(); }
+
+function renderMineView(){
+  const el=$('viewMine');
+  if(!self){
+    el.innerHTML=`<div class="empty"><div class="ic">👋</div><div class="t">לא בחרתם משתמש</div>
+      <div class="s">לחצו על "החלפה" למעלה כדי לבחור את עצמכם ולראות את התורנויות שלכם</div></div>`;
+    return;
+  }
+  const list=dutiesOf(self);
+  const total=list.length, dn=list.filter(x=>done[key(x.ti,x.di)]).length;
+  const pct=total?Math.round(dn/total*100):0;
+  let msg = dn===0?"בוא נתחיל 💪" : dn<total?`עוד ${total-dn} ולסיים!` : "סיימת הכל! 🎉";
+
+  let html=`<div class="hero"><div class="gk"></div>
+    <div class="greet"><div class="hi">שלום,</div><div class="who">${self}</div><div class="msg">${msg}</div></div>
+    <div class="ring" style="--p:${pct}"><div class="hole"><span class="n">${dn}</span><span class="d">מתוך ${total}</span></div></div>
+  </div>`;
+
+  if(total && dn===total){
+    html+=`<div class="celebrate"><div class="e">🏛️✨</div><div class="t">כל הכבוד, ${self}!</div><div class="s">סיימת את כל התורנויות שלך</div></div>`;
+  }
+
+  // group by date
+  const byDate={};
+  list.forEach(x=>{ (byDate[x.di]=byDate[x.di]||[]).push(x) });
   DATES.forEach((date,di)=>{
-    const card = document.createElement('section');
-    card.className='day';
-    card.dataset.di=di;
-
-    const [d,m] = date.split(".");
-    card.innerHTML = `
-      <div class="day-head">
-        <div class="date-badge"><span class="d">${d}</span><span class="m">יולי</span></div>
-        <div class="meta">
-          <div class="dow">${dowFor(date)}</div>
-          <div class="cnt">${date} · ${TASKS.length} תורנויות</div>
-        </div>
-        <div class="day-prog"><span class="ring" data-ring="${di}">0/${TASKS.length}</span></div>
-      </div>
-      <div class="tasks"></div>`;
-
-    const tasksEl = card.querySelector('.tasks');
-    TASKS.forEach((task,ti)=>{
-      const who = SCHEDULE[ti][di];
-      const row = document.createElement('div');
-      row.className='task';
-      row.dataset.ti=ti; row.dataset.di=di; row.dataset.who=who;
-      row.innerHTML = `
+    if(!byDate[di]) return;
+    const[d,m]=date.split(".");
+    html+=`<div class="day-label"><span class="dl">${dow(date)}</span><span class="dd">${date}</span><span class="ln"></span></div><div class="card">`;
+    byDate[di].forEach(x=>{
+      const isDone=!!done[key(x.ti,x.di)];
+      html+=`<div class="duty ${isDone?'done':''}" data-ti="${x.ti}" data-di="${x.di}">
         <div class="check"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
-        <div class="t-body">
-          <div class="t-name">${task}</div>
-          <div class="t-who"><span class="who-ic">👤</span>${who}</div>
-        </div>`;
-      row.addEventListener('click',()=>toggle(ti,di,row));
-      tasksEl.appendChild(row);
+        <div class="d-body"><div class="d-task">${x.task}</div>
+          <div class="d-sub"><span class="with">${partnersText(x.who,self)}</span></div></div>
+        <div class="d-date"><span class="dn">${d}</span><span class="dm">יולי</span></div>
+      </div>`;
     });
-    daysEl.appendChild(card);
+    html+=`</div>`;
   });
+  el.innerHTML=html;
+  el.querySelectorAll('.duty').forEach(r=>r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di));
 }
 
-function toggle(ti,di,row){
-  const k = key(ti,di);
-  if(done[k]) delete done[k]; else done[k]=true;
-  pending.add(k);
-  saveDone();
+function renderAllView(){
+  const el=$('viewAll'); let html="";
+  DATES.forEach((date,di)=>{
+    const[d,m]=date.split(".");
+    const dnt=TASKS.filter((_,ti)=>done[key(ti,di)]).length;
+    html+=`<div class="card allday"><div class="allday-head">
+      <div class="d-date"><span class="dn">${d}</span><span class="dm">יולי</span></div>
+      <div class="meta"><div class="dow">${dow(date)}</div><div class="cnt">${date}</div></div>
+      <div class="pr">${dnt}/${TASKS.length}</div></div>`;
+    TASKS.forEach((task,ti)=>{
+      const who=SCHEDULE[ti][di], isDone=!!done[key(ti,di)];
+      const mine=self&&splitPair(who).includes(self);
+      html+=`<div class="mini ${isDone?'done':''} ${mine?'mine':''}" data-ti="${ti}" data-di="${di}">
+        <div class="m-check"><svg viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+        <div class="m-body"><div class="m-task">${task}</div><div class="m-who">${who}</div></div>
+      </div>`;
+    });
+    html+=`</div>`;
+  });
+  el.innerHTML=html;
+  el.querySelectorAll('.mini').forEach(r=>r.onclick=()=>toggle(+r.dataset.ti,+r.dataset.di));
+}
+
+function toggle(ti,di){
+  const k=key(ti,di);
+  const nowDone=!done[k];
+  if(nowDone) done[k]=true; else delete done[k];
+  pending.add(k); saveDone();
+  if(navigator.vibrate) navigator.vibrate(nowDone?18:8);
   render();
-  if(done[k]) showToast("כל הכבוד! התורנות סומנה כבוצעה ✓");
+  if(nowDone){
+    showToast("יופי! התורנות סומנה ✓");
+    // celebrate if self just completed all
+    if(self){ const l=dutiesOf(self); if(l.length && l.every(x=>done[key(x.ti,x.di)])) confetti(); }
+  }
   syncCycle();
 }
 
-/* ---------- cloud sync ---------- */
-function setSync(state){
-  const el=document.getElementById('syncBadge');
-  if(!el) return;
-  el.className='sync '+state;
-  const txt={ok:'מסונכרן',sync:'מסנכרן…',off:'לא מקוון'}[state]||'מתחבר…';
-  el.querySelector('span').textContent=txt;
-}
-async function remoteGet(){
-  const r=await fetch(SYNC_URL,{cache:'no-store'});
-  if(!r.ok) throw new Error('GET '+r.status);
-  const j=await r.json();
-  return (j&&j.data&&j.data.done) || {};
-}
-async function remotePut(map){
-  const r=await fetch(SYNC_URL,{method:'PUT',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({name:'parus-roster-2026',data:{done:map,v:1}})});
-  if(!r.ok) throw new Error('PUT '+r.status);
-}
+/* ============ cloud sync ============ */
+function setSync(s){ const e=$('syncBadge'); if(!e)return; e.className='sync '+s;
+  e.querySelector('span').textContent={ok:'מסונכרן',sync:'מסנכרן…',off:'לא מקוון'}[s]||'מתחבר…'; }
+async function remoteGet(){ const r=await fetch(SYNC_URL,{cache:'no-store'}); if(!r.ok)throw 0;
+  const j=await r.json(); return (j&&j.data&&j.data.done)||{}; }
+async function remotePut(m){ const r=await fetch(SYNC_URL,{method:'PUT',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({name:'parus-roster-2026',data:{done:m,v:2}})}); if(!r.ok)throw 0; }
 async function syncCycle(){
-  if(busy){ queued=true; return; }
-  busy=true; setSync('sync');
+  if(busy){queued=true;return} busy=true; setSync('sync');
   try{
-    const remote = await remoteGet();
-    let changed=false;
-    // adopt other devices' changes for cells we didn't just touch
-    Object.keys(remote).forEach(k=>{ if(!pending.has(k) && !done[k]){ done[k]=true; changed=true; } });
-    Object.keys(done).forEach(k=>{ if(!pending.has(k) && !remote[k]){ delete done[k]; changed=true; } });
-    // push our pending local changes (merged on top of latest remote)
+    const remote=await remoteGet(); let changed=false;
+    Object.keys(remote).forEach(k=>{ if(!pending.has(k)&&!done[k]){done[k]=true;changed=true} });
+    Object.keys(done).forEach(k=>{ if(!pending.has(k)&&!remote[k]){delete done[k];changed=true} });
     const snap=[...pending];
     if(snap.length){ await remotePut({...done}); snap.forEach(k=>pending.delete(k)); }
     if(changed){ saveDone(); render(); }
     setSync('ok');
-  }catch(e){
-    setSync('off');
-  }finally{
-    busy=false;
-    if(queued){ queued=false; syncCycle(); }
+  }catch(e){ setSync('off'); }
+  finally{ busy=false; if(queued){queued=false;syncCycle()} }
+}
+
+/* ============ ui bits ============ */
+function showToast(m){ const t=$('toast'); t.textContent=m; t.classList.add('show');
+  clearTimeout(showToast._t); showToast._t=setTimeout(()=>t.classList.remove('show'),1700); }
+function confetti(){
+  const c=$('confetti'); const cols=['#c8a14a','#e2c879','#0e4d92','#1769b5','#ffffff','#1ea672'];
+  for(let i=0;i<90;i++){ const d=document.createElement('div'); d.className='cf';
+    d.style.left=Math.random()*100+'vw';
+    d.style.background=cols[i%cols.length];
+    d.style.transform=`translateY(0) rotate(${Math.random()*360}deg)`;
+    const dur=2.6+Math.random()*1.8, delay=Math.random()*.5;
+    d.style.animation=`cffall ${dur}s cubic-bezier(.3,.6,.7,1) ${delay}s forwards`;
+    d.style.opacity=.95; if(Math.random()>.5) d.style.borderRadius='50%';
+    c.appendChild(d); setTimeout(()=>d.remove(),(dur+delay)*1000+200);
   }
 }
 
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  clearTimeout(showToast._t);
-  showToast._t=setTimeout(()=>t.classList.remove('show'),1800);
-}
+/* sheet */
+function openSheet(){ $('sheetSub').textContent=self?('מחובר כ־'+self):'מצב צפייה'; $('sheet').classList.add('show'); }
+function closeSheet(){ $('sheet').classList.remove('show'); }
 
-/* ---------- render state ---------- */
-function render(){
-  // chips active
-  document.querySelectorAll('.chip').forEach(c=>{
-    c.classList.toggle('active', c.dataset.name===query);
-  });
-
-  let totalDone=0, totalAll=0, anyVisible=false;
-
-  document.querySelectorAll('.day').forEach(card=>{
-    const di=+card.dataset.di;
-    let dayDone=0, dayShown=0, dayMatch=0;
-    card.querySelectorAll('.task').forEach(row=>{
-      const ti=+row.dataset.ti;
-      const who=row.dataset.who;
-      const isDone=!!done[key(ti,di)];
-      const isMine=matches(who);
-
-      totalAll++; if(isDone) totalDone++;
-
-      row.classList.toggle('done',isDone);
-      row.classList.toggle('mine',isMine);
-
-      // visibility for "only mine"
-      const show = !onlyMine || isMine;
-      row.style.display = show ? '' : 'none';
-      if(show) dayShown++;
-      if(isMine) dayMatch++;
-      // count completed within this day (all tasks)
-      if(isDone) dayDone++;
-    });
-
-    // ring per day
-    const ring=card.querySelector('[data-ring]');
-    if(ring) ring.textContent = dayDone+"/"+TASKS.length;
-
-    // hide day entirely if filtering and nothing matches
-    const visible = !onlyMine || dayMatch>0;
-    card.style.display = visible ? '' : 'none';
-    card.classList.toggle('dim', dayDone===TASKS.length);
-    if(visible && dayShown>0) anyVisible=true;
-  });
-
-  // progress (context-aware: when filtering by name, show that person's progress)
-  let pDone=totalDone, pAll=totalAll, lbl="סך הכל תורנויות שהושלמו";
-  if(query){
-    pDone=0;pAll=0;
-    SCHEDULE.forEach((rowArr,ti)=>rowArr.forEach((who,di)=>{
-      if(matches(who)){ pAll++; if(done[key(ti,di)]) pDone++; }
-    }));
-    lbl="התורנויות של "+query;
-  }
-  document.getElementById('progLbl').textContent=lbl;
-  document.getElementById('progDone').textContent=pDone;
-  document.getElementById('progTotal').textContent=pAll;
-  const pct = pAll? Math.round(pDone/pAll*100):0;
-  document.getElementById('progBar').style.width=pct+"%";
-  const sub=document.getElementById('progSub');
-  if(pAll===0) sub.textContent="אין תורנויות תואמות";
-  else if(pct===100) sub.textContent="הכל הושלם! 🎉 כל הכבוד";
-  else sub.textContent=pct+"% הושלמו · נשארו "+(pAll-pDone)+" תורנויות";
-
-  document.getElementById('empty').classList.toggle('show', !anyVisible);
-}
-
-/* ---------- events ---------- */
-document.getElementById('search').addEventListener('input',e=>{
-  query=e.target.value.trim();
-  render();
-});
-document.getElementById('onlyMine').addEventListener('change',e=>{
-  onlyMine=e.target.checked; render();
-});
-document.getElementById('resetBtn').addEventListener('click',()=>{
-  if(confirm("לאפס את כל הסימונים עבור כולם? הפעולה תמחק את כל ה־✓ מהלוח המשותף.")){
-    Object.keys(done).forEach(k=>pending.add(k));
-    done={}; saveDone(); render(); syncCycle(); showToast("כל הסימונים אופסו");
-  }
-});
-
-/* ---------- init ---------- */
-buildChips();
-buildDays();
-render();
-
-/* first pull from cloud + live polling */
-syncCycle();
-setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); }, 7000);
+/* ============ events ============ */
+$('guestBtn').onclick=guest;
+$('pkReset').onclick=()=>doReset();
+$('meChip').onclick=openSheet;
+$('scrim').onclick=closeSheet;
+$('closeSheet').onclick=closeSheet;
+$('changeMe').onclick=()=>{ closeSheet(); openPicker(); };
+$('resetAll').onclick=()=>{ closeSheet(); doReset(); };
+document.querySelectorAll('#seg button').forEach(b=>b.onclick=()=>{ view=b.dataset.v; syncSeg(); render(); });
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') syncCycle(); });
+setInterval(()=>{ if(document.visibilityState==='visible') syncCycle(); },7000);
+
+function doReset(){
+  if(confirm("לאפס את כל הסימונים עבור כולם? פעולה זו תמחק את כל ה־✓ מהלוח המשותף.")){
+    Object.keys(done).forEach(k=>pending.add(k)); done={}; saveDone(); render(); syncCycle(); showToast("כל הסימונים אופסו");
+  }
+}
+
+/* ============ init ============ */
+buildPicker(); renderMe();
+if(self){ chooseSelf(self); }   // returning user → straight into app
+else { /* show picker (default visible) */ }
 </script>
 </body>
 </html>
