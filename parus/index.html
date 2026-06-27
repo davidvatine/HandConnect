@@ -227,12 +227,12 @@
   .ov-title .wv{font-size:1.1rem}
   .ov-hint{font-size:.74rem;color:var(--muted);margin:0 4px 12px}
   .ov-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -2px;padding-bottom:4px}
-  table.ov{border-collapse:separate;border-spacing:5px;table-layout:fixed;min-width:540px;width:100%}
+  table.ov{border-collapse:separate;border-spacing:5px;table-layout:fixed;min-width:600px;width:100%}
   .ov thead th{font-weight:700;text-align:center;padding:0 0 5px;vertical-align:bottom}
   .ov thead .ov-dow{display:block;font-size:.62rem;color:var(--gold);font-weight:800}
   .ov thead .ov-d{font-family:'Cinzel',serif;font-weight:800;color:var(--blue);font-size:.95rem}
   .ov-task{position:sticky;right:0;z-index:2;background:#fff;text-align:right;font-size:.74rem;font-weight:800;
-    color:var(--ink);width:72px;max-width:72px;padding-left:11px;white-space:nowrap;line-height:1.1;
+    color:var(--ink);width:104px;max-width:104px;padding-left:11px;white-space:normal;line-height:1.18;vertical-align:middle;
     box-shadow:-8px 0 8px -6px rgba(0,0,0,.08)}
   .ov-task .ov-ic{margin-left:3px;font-size:.82rem}
   .ov-cell{width:100%;min-height:46px;border-radius:10px;background:#eef1ee;border:1.5px solid transparent;
@@ -486,7 +486,7 @@ function overviewHTML(a){
   DATES.forEach(date=>{ const[d]=date.split("."); h+=`<th><span class="ov-dow">${dowS(date)}</span><span class="ov-d">${d}</span></th>`; });
   h+=`</tr></thead><tbody>`;
   TASKS.forEach((task,ti)=>{
-    h+=`<tr><th class="ov-task"><span class="ov-ic">${TASK_META[ti].ic}</span>${TASK_META[ti].s}</th>`;
+    h+=`<tr><th class="ov-task"><span class="ov-ic">${TASK_META[ti].ic}</span>${task}</th>`;
     DATES.forEach((date,di)=>{
       const who=SCHEDULE[ti][di];
       if(!who){ h+=`<td><span class="ov-cell na" title="${task} · ${date} · אין תורנות">–</span></td>`; return; }
@@ -533,15 +533,17 @@ function renderAllView(a){
 
 function toggle(ti,di){
   if(!self){ showToast("בחרו תחילה מי אתם 🙂"); openPicker(); return; }
-  const k=key(ti,di);
-  const marker=done[k];
-  if(marker){
-    // already marked — only the person who marked it may cancel
-    if(marker===self || marker===true){ delete done[k]; afterToggle(k,false); }
-    else { showToast("רק "+marker+" יכול/ה לבטל את הסימון הזה"); if(navigator.vibrate)navigator.vibrate([10,40,10]); }
-  } else {
-    done[k]=self; afterToggle(k,true);
+  const who=SCHEDULE[ti][di];
+  if(!who) return;
+  // only members of the duty's pair may mark / unmark it
+  if(!splitPair(who).includes(self)){
+    showToast("התורנות הזו של "+who);
+    if(navigator.vibrate) navigator.vibrate([10,40,10]);
+    return;
   }
+  const k=key(ti,di);
+  if(done[k]){ delete done[k]; afterToggle(k,false); }
+  else { done[k]=self; afterToggle(k,true); }
 }
 function afterToggle(k,nowDone){
   pending.add(k); saveDone();
